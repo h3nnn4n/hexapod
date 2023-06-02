@@ -1,0 +1,17 @@
+repos:
+
+- repo: https://github.com/pre-commit/pre-commit-hooks
+  rev: v2.3.0
+  hooks:
+  - id: check-yaml
+  - id: end-of-file-fixer
+  - id: trailing-whitespace
+
+- repo: https://github.com/pocc/pre-commit-hooks
+  rev: v1.3.5
+  hooks:
+  - id: clang-format
+  - id: cppcheck
+    args: [--language=c++,--enable=all,--suppress=unusedFunction,--suppress=unusedPrivateFunction,--suppress=unmatchedSuppression]
+  - id: cpplint
+    args: ["--filter=-whitespace/indent,-whitespace/line_length,-build/include_what_you_use"]

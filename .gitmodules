@@ -1,0 +1,6 @@
+[submodule "Arduino-Makefile"]
+	path = Arduino-Makefile
+	url = https://github.com/WeAreLeka/Arduino-Makefile
+[submodule "lib/Servo"]
+	path = lib/Servo
+	url = https://github.com/arduino-libraries/Servo
