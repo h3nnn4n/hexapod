@@ -21,4 +21,3 @@ sudo mv "$ARDUINO_BASENAME/" "$ARDUINO"
 echo "Installation of dependencies is complete, we are now going to run some tests..."
 
 source "$SCRIPTS_DIR/runtests.sh"
-

@@ -3,4 +3,3 @@ This file is here only so that Git can keep track of the `test` folder. If not i
 You can write messages to your loved ones here.
 
 Peace.
-
