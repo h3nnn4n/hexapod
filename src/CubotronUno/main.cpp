@@ -6,67 +6,31 @@
 #include <stdint.h>
 
 #include <Arduino.h>
-#include <Servo.h>
+#include <PWMServoDriver.h>
 #include <Wire.h>
 
-#define base_angle   90
-#define angle_offset 25
+int           ledState       = LOW;
+const int     ledPin         = LED_BUILTIN;
+const int32_t interval       = 100;
+uint32_t      previousMillis = 0;
 
-const int     ledPin           = LED_BUILTIN;
-const int32_t interval         = 100;
-uint32_t      previousMillis   = 0;
-uint32_t      servoMillis      = 0;
-int           ledState         = LOW;
-int           servo_state      = 0;
-float         servo_angle      = base_angle;
-float         servo_angle_step = 0.5;
-
-const int min_angle          = base_angle - angle_offset;
-const int max_angle          = base_angle + angle_offset;
-const int servo_update_delay = 500;
-
-const int servo_min_pulse_width = 500;
-const int servo_max_pulse_width = 2500;
-
-Servo servo_femur;
-Servo servo_tibia;
-Servo servo_coxa;
+PWMServoDriver pca = PWMServoDriver(0x40);
 
 void blinkenlights();
 
 void setup() {
     pinMode(LED_BUILTIN, OUTPUT);
 
-    servo_femur.attach(9, servo_min_pulse_width, servo_max_pulse_width);
-    servo_tibia.attach(10, servo_min_pulse_width, servo_max_pulse_width);
-    servo_coxa.attach(11, servo_min_pulse_width, servo_max_pulse_width);
-
-    servo_femur.write(servo_angle);
-    servo_tibia.write(servo_angle);
-    servo_coxa.write(servo_angle);
+    pca.begin();
+    pca.setPWMFreq(60);
 }
 
 void loop() {
-    uint32_t currentMillis = millis();
-
-    if (currentMillis - servoMillis >= servo_update_delay) {
-        servoMillis = currentMillis;
-        servo_state += 1;
-
-        if (servo_state % 3 == 0) {
-            servo_angle = min_angle;
-        } else if (servo_state % 3 == 1) {
-            servo_angle = base_angle;
-        } else {
-            servo_angle = max_angle;
-        }
-
-        servo_femur.write(servo_angle);
-        servo_tibia.write(servo_angle);
-        servo_coxa.write(servo_angle);
-    }
-
     blinkenlights();
+
+    for (int i = 0; i < 16; i++) {
+        pca.writeMicroseconds(i, 1500);
+    }
 }
 
 void blinkenlights() {

@@ -4,3 +4,6 @@
 [submodule "lib/Servo"]
 	path = lib/Servo
 	url = https://github.com/arduino-libraries/Servo
+[submodule "lib/PWMServoDriver"]
+	path = lib/PWMServoDriver
+	url = https://github.com/adafruit/Adafruit-PWM-Servo-Driver-Library
