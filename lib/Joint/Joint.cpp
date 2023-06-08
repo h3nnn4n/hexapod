@@ -26,6 +26,8 @@ void Joint::set_angle(float angle) {
     uint16_t us = min_us + middle_us + angle * us_per_angle;
 
 #ifdef __DEBUG
+    snprintf(buffer, sizeof(buffer), "servo_id=%3d ", _servo_id);
+    Serial.write(buffer);
     dtostrf(angle, 6, 2, f_buffer);
     snprintf(buffer, sizeof(buffer), "angle=%s ", f_buffer);
     Serial.write(buffer);
