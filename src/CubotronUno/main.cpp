@@ -17,13 +17,13 @@ const int32_t interval         = 100;
 uint32_t      previousMillis   = 0;
 uint32_t      servoMillis      = 0;
 int           ledState         = LOW;
-int           servo_direction  = LOW;
+int           servo_state      = 0;
 float         servo_angle      = base_angle;
 float         servo_angle_step = 0.5;
 
 const int min_angle          = base_angle - angle_offset;
 const int max_angle          = base_angle + angle_offset;
-const int servo_update_delay = 10;
+const int servo_update_delay = 500;
 
 const int servo_min_pulse_width = 500;
 const int servo_max_pulse_width = 2500;
@@ -51,23 +51,14 @@ void loop() {
 
     if (currentMillis - servoMillis >= servo_update_delay) {
         servoMillis = currentMillis;
+        servo_state += 1;
 
-        if (servo_direction == LOW) {
-            servo_angle += servo_angle_step;
+        if (servo_state % 3 == 0) {
+            servo_angle = min_angle;
+        } else if (servo_state % 3 == 1) {
+            servo_angle = base_angle;
         } else {
-            servo_angle -= servo_angle_step;
-        }
-
-        if (servo_angle < min_angle || servo_angle > max_angle) {
-            if (servo_direction == LOW) {
-                servo_direction = HIGH;
-                servo_angle += servo_angle_step;
-                servo_angle += servo_angle_step;
-            } else {
-                servo_direction = LOW;
-                servo_angle -= servo_angle_step;
-                servo_angle -= servo_angle_step;
-            }
+            servo_angle = max_angle;
         }
 
         servo_femur.write(servo_angle);
