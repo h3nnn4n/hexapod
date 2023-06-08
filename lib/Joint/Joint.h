@@ -21,8 +21,9 @@ class Joint {
     uint16_t min_us = 1000;
     uint16_t max_us = 2000;
 
-    float min_angle = -90;
-    float max_angle = 90;
+    // These are the angle limits in the servo, not an arbitrary design constaint
+    const float servo_min_angle = -90;
+    const float servo_max_angle = 90;
 
     void write_us_to_servo(uint16_t us);
 };
