@@ -12,6 +12,6 @@ repos:
   hooks:
   - id: clang-format
   - id: cppcheck
-    args: [--language=c++,--enable=all,--suppress=unusedFunction,--suppress=unusedPrivateFunction,--suppress=unmatchedSuppression]
+    args: [--language=c++, --enable=all, --suppressions-list=.cppcheck.suppressions]
   - id: cpplint
-    args: ["--filter=-whitespace/indent,-whitespace/line_length,-build/include_what_you_use"]
+    args: ["--filter=-whitespace/indent,-whitespace/line_length,-build/include_what_you_use",  "--exclude=lib/PWMServoDriver/"]

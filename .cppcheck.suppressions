@@ -1,0 +1,5 @@
+unusedFunction:*:*
+unusedPrivateFunction:*:*
+unmatchedSuppression:*:*
+noExplicitConstructor:lib/PWMServoDriver/*
+uninitMemberVar:lib/PWMServoDriver/*
