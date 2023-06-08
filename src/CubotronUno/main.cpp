@@ -15,6 +15,7 @@ const int     ledPin         = LED_BUILTIN;
 const int32_t interval       = 100;
 uint32_t      previousMillis = 0;
 float         test_angle     = 0;
+float         angle_step     = 0.5f;
 
 PWMServoDriver pca = PWMServoDriver(0x40);
 
@@ -44,10 +45,12 @@ void loop() {
     femur.set_angle(0);
     coxa.set_angle(0);
 
-    test_angle += 0.5f;
+    test_angle += angle_step;
 
-    if (test_angle > 90.0f)
-        test_angle = -90.0f;
+    if (test_angle > 90.0f || test_angle < -90.0f) {
+        angle_step *= -1;
+        test_angle += angle_step;
+    }
 
     test_joint.set_angle(test_angle);
 }
