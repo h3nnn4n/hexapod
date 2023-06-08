@@ -15,8 +15,16 @@ Joint::Joint(PWMServoDriver *servo_driver, uint8_t servo_id) {
     _servo_id     = servo_id;
 }
 
+Joint::Joint(PWMServoDriver *servo_driver, uint8_t servo_id, uint16_t min_us, uint16_t max_us) {
+    _servo_driver = servo_driver;
+    _servo_id     = servo_id;
+
+    _min_us = constrain(min_us, MIN_US_LIMIT, MAX_US_LIMIT);
+    _max_us = constrain(max_us, MIN_US_LIMIT, MAX_US_LIMIT);
+}
+
 void Joint::set_angle(float angle) {
-    angle = constrain(angle, servo_min_angle, servo_max_angle);
+    angle = constrain(angle, _servo_min_angle, _servo_max_angle);
 
     // TODO(h3nnn4n): We could have a small delta so we don't send tiny updates
     // that are below the precision of the servo
@@ -24,13 +32,13 @@ void Joint::set_angle(float angle) {
         return;
 
     // FIXME: Many of these could be pre computed and stored
-    uint16_t angle_range = servo_max_angle - servo_min_angle;
-    uint16_t us_range    = max_us - min_us;
+    uint16_t angle_range = _servo_max_angle - _servo_min_angle;
+    uint16_t us_range    = _max_us - _min_us;
     uint16_t middle_us   = us_range / 2;
 
     double us_per_angle = us_range / angle_range;
 
-    uint16_t us = min_us + middle_us + angle * us_per_angle;
+    uint16_t us = _min_us + middle_us + angle * us_per_angle;
 
 #ifdef __DEBUG
     snprintf(buffer, sizeof(buffer), "servo_id=%3d ", _servo_id);

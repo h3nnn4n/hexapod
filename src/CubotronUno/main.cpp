@@ -22,7 +22,7 @@ PWMServoDriver pca = PWMServoDriver(0x40);
 Joint tibia      = Joint(&pca, 13);
 Joint femur      = Joint(&pca, 14);
 Joint coxa       = Joint(&pca, 15);
-Joint test_joint = Joint(&pca, 0);
+Joint test_joint = Joint(&pca, 0, 1000 - 575, 2000 + 417);
 
 void blinkenlights();
 
@@ -47,9 +47,13 @@ void loop() {
 
     test_angle += angle_step;
 
+    if (fabs(test_angle) < 0.01f) {
+        delay(1000);
+    }
+
     if (test_angle > 90.0f || test_angle < -90.0f) {
         angle_step *= -1;
-        test_angle += angle_step;
+        delay(1000);
     }
 
     test_joint.set_angle(test_angle);
