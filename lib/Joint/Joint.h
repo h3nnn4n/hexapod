@@ -15,6 +15,8 @@ class Joint {
     void set_angle(float angle);
 
   private:
+    float _current_angle = 0;
+
     PWMServoDriver *_servo_driver;
     uint8_t         _servo_id;
 
