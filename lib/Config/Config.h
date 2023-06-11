@@ -8,4 +8,6 @@
 
 #define CUBE_FACE_SPEED 900
 
+//#define __DEBUG
+
 #endif  // LIB_CONFIG_CONFIG_H_

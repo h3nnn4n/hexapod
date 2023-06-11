@@ -6,6 +6,8 @@
 #ifndef LIB_JOINT_JOINT_H_
 #define LIB_JOINT_JOINT_H_
 
+#include <Config.h>
+
 #include <PWMServoDriver.h>
 
 #define MIN_US_LIMIT 300
