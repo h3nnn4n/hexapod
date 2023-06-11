@@ -20,19 +20,20 @@ class Joint {
 
     void set_angle(float angle);
 
+    void set_angle_range(float min_angle, float max_angle);
+
   private:
     float _current_angle = 0;
 
     PWMServoDriver *_servo_driver;
     uint8_t         _servo_id;
 
-    // Sane defaults that should always be safe
-    uint16_t _min_us = 1000;
-    uint16_t _max_us = 2000;
+    // Values from mg995 servos that I have
+    uint16_t _min_us = 550;
+    uint16_t _max_us = 2400;
 
-    // These are the angle limits in the servo, not an arbitrary design constaint
-    const float _servo_min_angle = -90;
-    const float _servo_max_angle = 90;
+    float _servo_min_angle = -90;
+    float _servo_max_angle = 90;
 
     void write_us_to_servo(uint16_t us);
 };
