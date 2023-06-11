@@ -8,16 +8,15 @@
 #include <Config.h>
 
 #include <Arduino.h>
+#include <BlinkenLights.h>
 #include <Joint.h>
 #include <PWMServoDriver.h>
 #include <Wire.h>
 
-int           ledState       = LOW;
-const int     ledPin         = LED_BUILTIN;
-const int32_t interval       = 50;
-uint32_t      previousMillis = 0;
-float         test_angle     = 0;
-float         angle_step     = 1.0f;
+float test_angle = 0;
+float angle_step = 1.0f;
+
+BlinkenLights blinkenlights = BlinkenLights();
 
 PWMServoDriver pca = PWMServoDriver(0x40);
 
@@ -25,16 +24,15 @@ Joint tibia = Joint(&pca, 6, 550, 2400);
 Joint femur = Joint(&pca, 5, 550, 2400);
 Joint coxa  = Joint(&pca, 4, 550, 2400);
 
-void blinkenlights();
 void update_angles();
 
 void setup() {
-    pinMode(LED_BUILTIN, OUTPUT);
-
 #ifdef __DEBUG
     Serial.begin(115200);
     Serial.println("starting");
 #endif
+
+    blinkenlights.init();
 
     pca.reset();
     pca.begin();
@@ -48,7 +46,7 @@ void setup() {
 }
 
 void loop() {
-    blinkenlights();
+    blinkenlights.update();
 
     test_angle += angle_step;
 
@@ -68,21 +66,4 @@ void update_angles() {
     tibia.set_angle(test_angle * 0.85);
     femur.set_angle(-test_angle / 2.0);
     coxa.set_angle(test_angle / 3.0);
-}
-
-void blinkenlights() {
-    // TODO(h3nnn4n): Move to a lib
-    uint32_t currentMillis = millis();
-
-    if (currentMillis - previousMillis >= interval) {
-        previousMillis = currentMillis;
-
-        if (ledState == LOW) {
-            ledState = HIGH;
-        } else {
-            ledState = LOW;
-        }
-
-        digitalWrite(ledPin, ledState);
-    }
 }
