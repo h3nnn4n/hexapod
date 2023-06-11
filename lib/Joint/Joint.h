@@ -25,6 +25,8 @@ class Joint {
 
     void set_angle_range(float min_angle, float max_angle);
 
+    float get_angle();
+
   private:
     float _current_angle = 0;
 

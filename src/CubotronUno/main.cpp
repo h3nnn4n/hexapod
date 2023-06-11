@@ -10,7 +10,9 @@
 #include <Arduino.h>
 #include <BlinkenLights.h>
 #include <Joint.h>
+#include <Leg.h>
 #include <PWMServoDriver.h>
+#include <VectorDatatype.h>
 #include <Wire.h>
 
 float test_angle = 0;
@@ -20,9 +22,9 @@ BlinkenLights blinkenlights = BlinkenLights();
 
 PWMServoDriver pca = PWMServoDriver(0x40);
 
-Joint tibia = Joint(&pca, 6, 550, 2400);
-Joint femur = Joint(&pca, 5, 550, 2400);
-Joint coxa  = Joint(&pca, 4, 550, 2400);
+Joint tibia = Joint(&pca, 6);
+Joint femur = Joint(&pca, 5);
+Joint coxa  = Joint(&pca, 4);
 
 void update_angles();
 
@@ -43,6 +45,10 @@ void setup() {
     for (int i = 0; i < 16; i++) {
         pca.writeMicroseconds(i, 1500);
     }
+
+    coxa.set_angle_range(-90.0f, 90.0f);
+    femur.set_angle_range(-90.0f, 90.0f);
+    tibia.set_angle_range(-90.0f, 90.0f);
 }
 
 void loop() {

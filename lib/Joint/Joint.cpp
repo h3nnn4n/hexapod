@@ -25,6 +25,8 @@ Joint::Joint(PWMServoDriver *servo_driver, uint8_t servo_id, uint16_t min_us, ui
     _max_us = constrain(max_us, MIN_US_LIMIT, MAX_US_LIMIT);
 }
 
+float Joint::get_angle() { return _current_angle; }
+
 void Joint::set_angle_range(float min_angle, float max_angle) {
     _servo_min_angle = min_angle;
     _servo_max_angle = max_angle;
