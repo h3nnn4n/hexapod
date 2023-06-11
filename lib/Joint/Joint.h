@@ -6,12 +6,15 @@
 #ifndef LIB_JOINT_JOINT_H_
 #define LIB_JOINT_JOINT_H_
 
+#include <stdint.h>
+
 #include <Config.h>
 
 #include <PWMServoDriver.h>
 
-#define MIN_US_LIMIT 300
-#define MAX_US_LIMIT 2750
+// Values from mg995 servos that I have
+#define MIN_US_LIMIT 550
+#define MAX_US_LIMIT 2400
 
 class Joint {
   public:
@@ -28,9 +31,8 @@ class Joint {
     PWMServoDriver *_servo_driver;
     uint8_t         _servo_id;
 
-    // Values from mg995 servos that I have
-    uint16_t _min_us = 550;
-    uint16_t _max_us = 2400;
+    uint16_t _min_us = MIN_US_LIMIT;
+    uint16_t _max_us = MAX_US_LIMIT;
 
     float _servo_min_angle = -90;
     float _servo_max_angle = 90;

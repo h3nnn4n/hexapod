@@ -3,6 +3,8 @@
  *
  */
 
+#include <stdint.h>
+
 #include "Joint.h"
 
 #ifdef __DEBUG
