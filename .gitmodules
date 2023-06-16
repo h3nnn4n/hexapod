@@ -7,3 +7,6 @@
 [submodule "lib/Vector_datatype"]
 	path = lib/Vector_datatype
 	url = https://github.com/RCmags/vector_datatype
+[submodule "lib/AUnit"]
+	path = lib/AUnit
+	url = https://github.com/bxparks/AUnit
