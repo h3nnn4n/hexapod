@@ -15,9 +15,6 @@
 #include <VectorDatatype.h>
 #include <Wire.h>
 
-float test_angle = 0;
-float angle_step = 1.0f;
-
 BlinkenLights blinkenlights = BlinkenLights();
 
 PWMServoDriver pca = PWMServoDriver(0x40);
@@ -35,8 +32,8 @@ void setup() {
 #endif
 
     blinkenlights.init();
+    blinkenlights.set_update_interval(100);
 
-    pca.reset();
     pca.begin();
     pca.setPWMFreq(60);
 
@@ -54,22 +51,8 @@ void setup() {
 void loop() {
     blinkenlights.update();
 
-    test_angle += angle_step;
-
-    if (fabs(test_angle) <= 0.01f) {
-        update_angles();
-        delay(1000);
-    }
-
-    if (test_angle >= 90.0f || test_angle <= -90.0f) {
-        update_angles();
-        angle_step *= -1;
-        delay(1000);
-    }
-}
-
-void update_angles() {
-    tibia.set_angle(test_angle * 0.85);
-    femur.set_angle(-test_angle / 2.0);
-    coxa.set_angle(test_angle / 3.0);
+    float angle = sin(millis() / 1000.0f) * 90.0f;
+    tibia.set_angle(angle);
+    femur.set_angle(angle * 0.35f);
+    coxa.set_angle(angle);
 }
