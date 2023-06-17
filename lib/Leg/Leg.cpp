@@ -131,6 +131,16 @@ vec3_t Leg::inverse_kinematics(vec3_t target_position) {
             for (int j = 1; j <= n_nested_iters; j++) {
                 angles = best_angles + offsets[i_offset] * scale * j;
 
+                if (angles.x < _coxa->min_angle || angles.x > _coxa->max_angle) {
+                    continue;
+                }
+                if (angles.y < _femur->min_angle || angles.y > _femur->max_angle) {
+                    continue;
+                }
+                if (angles.z < _tibia->min_angle || angles.z > _tibia->max_angle) {
+                    continue;
+                }
+
                 vec3_t position = forward_kinematics(angles.x, angles.y, angles.z);
                 error           = feet_position_error(position, target_position);
 

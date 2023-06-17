@@ -28,19 +28,19 @@ Joint::Joint(PWMServoDriver *servo_driver, uint8_t servo_id, uint16_t min_us, ui
 float Joint::get_angle() { return _current_angle; }
 
 void Joint::set_angle_range(float min_angle, float max_angle) {
-    _servo_min_angle = min_angle;
-    _servo_max_angle = max_angle;
+    this->min_angle = min_angle;
+    this->max_angle = max_angle;
 }
 
 void Joint::set_angle(float angle) {
-    angle = constrain(angle, _servo_min_angle, _servo_max_angle);
+    angle = constrain(angle, min_angle, max_angle);
 
     // TODO(h3nnn4n): We could have a small delta so we don't send tiny updates
     // that are below the precision of the servo
     if (angle == _current_angle)
         return;
 
-    uint16_t us = map(angle, _servo_min_angle, _servo_max_angle, _min_us, _max_us);
+    uint16_t us = map(angle, min_angle, max_angle, _min_us, _max_us);
 
 #ifdef __DEBUG
     snprintf(buffer, sizeof(buffer), "servo_id=%3d ", _servo_id);
@@ -48,10 +48,10 @@ void Joint::set_angle(float angle) {
     dtostrf(angle, 6, 2, f_buffer);
     snprintf(buffer, sizeof(buffer), "angle=%s ", f_buffer);
     Serial.write(buffer);
-    dtostrf(_servo_min_angle, 6, 2, f_buffer);
+    dtostrf(min_angle, 6, 2, f_buffer);
     snprintf(buffer, sizeof(buffer), " min_angle=%s ", f_buffer);
     Serial.write(buffer);
-    dtostrf(_servo_max_angle, 6, 2, f_buffer);
+    dtostrf(max_angle, 6, 2, f_buffer);
     snprintf(buffer, sizeof(buffer), "max_angle=%s  ", f_buffer);
     Serial.write(buffer);
     snprintf(buffer, sizeof(buffer), "us=%d\n", us);

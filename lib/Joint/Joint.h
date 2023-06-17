@@ -27,6 +27,9 @@ class Joint {
 
     float get_angle();
 
+    float min_angle = -90;
+    float max_angle = 90;
+
   private:
     float _current_angle = 0;
 
@@ -35,9 +38,6 @@ class Joint {
 
     uint16_t _min_us = MIN_US_LIMIT;
     uint16_t _max_us = MAX_US_LIMIT;
-
-    float _servo_min_angle = -90;
-    float _servo_max_angle = 90;
 
     void write_us_to_servo(uint16_t us);
 };
