@@ -24,6 +24,9 @@ void setup() {
     Serial.begin(115200);
 
     leg.disable_servos();
+
+    // aunit::TestRunner::exclude("*");
+    // aunit::TestRunner::include("ik_*");
 }
 
 void loop() { aunit::TestRunner::run(); }

@@ -17,11 +17,14 @@ class Leg {
   public:
     Leg(Joint *coxa, Joint *femur, Joint *tibia);
 
-    void   init();
-    void   update();
-    void   enable_servos();
-    void   disable_servos();
+    void init();
+    void update();
+    void enable_servos();
+    void disable_servos();
+
     vec3_t forward_kinematics(float coxa_angle, float femur_angle, float tibia_angle);
+    vec3_t inverse_kinematics(vec3_t feet_position);
+    vec3_t inverse_kinematics(float feet_x, float feet_y, float feet_z);
 
   private:
     Joint *_coxa;
