@@ -15,6 +15,10 @@ if __name__ == '__main__':
 
     while True:
         line = serial_port.readline()
-        line = line.decode()
-        line = line.strip()
-        print(line)
+
+        try:
+            line = line.decode()
+            line = line.strip()
+            print(line)
+        except UnicodeDecodeError:
+            pass
