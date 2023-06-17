@@ -3,7 +3,7 @@
  *
  */
 
-#include "leg.h"
+#include "Leg.h"
 
 #include <math.h>
 
@@ -84,7 +84,7 @@ vec3_t Leg::inverse_kinematics(vec3_t target_position) {
     // This is a very dumb approach to IK. It is basically a brute force search
     // where the Arduino works instead of me deriving the equations.
 
-    //#define __IK_DEBUG
+    // #define __IK_DEBUG
 
 #ifdef __IK_DEBUG
     char f_buffer1[10];
@@ -99,7 +99,7 @@ vec3_t Leg::inverse_kinematics(vec3_t target_position) {
     const float    target_error   = 0.1f;
     float          scale          = 0.5f;
 
-    vec3_t offsets[] = {
+    const vec3_t offsets[] = {
         vec3_t(1.0f, 0.0f, 0.0f), vec3_t(-1.0f, 0.0f, 0.0f),  // Coxa
         vec3_t(0.0f, 1.0f, 0.0f), vec3_t(0.0f, -1.0f, 0.0f),  // Femur
         vec3_t(0.0f, 0.0f, 1.0f), vec3_t(0.0f, 0.0f, -1.0f),  // Tibia
