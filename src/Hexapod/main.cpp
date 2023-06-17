@@ -63,8 +63,8 @@ void setup() {
     femur.set_angle_range(-90.0f, 90.0f);
     tibia.set_angle_range(0.0f, 180.0f);
 
-    leg.enable_servos();
     leg.init();
+    leg.enable_servos();
 
     delay(250);
 }
@@ -72,46 +72,48 @@ void setup() {
 void loop() {
     blinkenlights.update();
 
-    button_down = digitalRead(2);
-    val_x       = analogRead(A0);
-    val_y       = analogRead(A1);
-    val_z       = analogRead(A2);
+    vec3_t raw_readings;
+    vec3_t target_position = vec3_t(0, 0, 0);
+    vec3_t target_angles   = vec3_t(0, 0, 0);
 
-    Serial.print(button_down);
+    raw_readings.x = analogRead(A0);
+    raw_readings.y = analogRead(A1);
+    raw_readings.z = analogRead(A2);
+
+    button_down = digitalRead(2);
+
+    // Serial.print(button_down);
 
     if (ik_mode) {
-        feet_x = map(val_x, 0, 1023, -300, 300);
-        feet_y = map(val_y, 0, 1023, 0, 300);
-        feet_z = map(val_z, 0, 1023, -300, 300);
-
-        Serial.print(" ");
-        Serial.print(feet_x);
-        Serial.print(" ");
-        Serial.print(feet_y);
-        Serial.print(" ");
-        Serial.print(feet_z);
+        target_position.x = map(raw_readings.x, 0, 1023, -300, 300);
+        target_position.y = map(raw_readings.y, 0, 1023, 0, 300);
+        target_position.z = map(raw_readings.z, 0, 1023, -300, 300);
     } else {
-        coxa_angle  = map(val_z, 0, 1023, -90, 90);
-        femur_angle = map(val_x, 0, 1023, -90, 90);
-        tibia_angle = map(val_y, 0, 1023, 0, 180);
-
-        Serial.print(" ");
-        Serial.print(coxa_angle);
-        Serial.print(" ");
-        Serial.print(femur_angle);
-        Serial.print(" ");
-        Serial.print(tibia_angle);
+        target_angles.x = map(raw_readings.z, 0, 1023, -90, 90);
+        target_angles.y = map(raw_readings.x, 0, 1023, -90, 90);
+        target_angles.z = map(raw_readings.y, 0, 1023, 0, 180);
     }
+
+    Serial.print("current: ");
+    serial_print_vec3(leg.get_current_position());
+    Serial.print("  |  target: ");
+    serial_print_vec3(leg.get_target_position());
+    Serial.print("  |  angles: ");
+    serial_print_vec3(leg.get_current_angles());
+    Serial.print("  |  error: ");
+    Serial.print(leg.get_error());
 
     Serial.println();
 
     if (button_down) {
         if (ik_mode) {
-            leg.move_feet_to(feet_x, feet_y, feet_z);
+            leg.set_target_foot_position(target_position);
         } else {
-            leg.move_joints(coxa_angle, femur_angle, tibia_angle);
+            leg.set_joint_angles(target_angles);
         }
     } else {
-        leg.move_feet_to(0, 300, 0);
+        leg.set_joint_angles(0, 0, 0);
     }
+
+    leg.update();
 }

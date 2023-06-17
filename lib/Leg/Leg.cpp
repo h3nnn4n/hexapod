@@ -30,13 +30,15 @@ void Leg::enable_servos() { _servos_enabled = true; }
 
 void Leg::disable_servos() { _servos_enabled = false; }
 
-void Leg::init() {
-    move_joints(0.0f, 0.0f, 0.0f);
-    //
-}
+void Leg::init() { set_joint_angles(0.0f, 0.0f, 0.0f); }
 
 void Leg::update() {
-    // Nothing?
+    _current_angles   = inverse_kinematics(_target_position);
+    _current_position = forward_kinematics(_current_angles);
+
+    if (_servos_enabled) {
+        move_joints(_current_angles);
+    }
 }
 
 /**
@@ -72,6 +74,8 @@ vec3_t Leg::forward_kinematics(float coxa_angle, float femur_angle, float tibia_
     return feet_position;
 }
 
+vec3_t Leg::forward_kinematics(vec3_t angles) { return forward_kinematics(angles.x, angles.y, angles.z); }
+
 /**
  * @brief Calculates the inverse kinematics for the leg.
  *
@@ -106,12 +110,10 @@ vec3_t Leg::inverse_kinematics(vec3_t target_position) {
         vec3_t(0.0f, 0.0f, 1.0f), vec3_t(0.0f, 0.0f, -1.0f),  // Tibia
     };
 
-    vec3_t angles        = vec3_t(0.0f, 0.0f, 0.0f);
-    vec3_t best_angles   = vec3_t(0.0f, 0.0f, 0.0f);
-    vec3_t position      = vec3_t(0.0f, 0.0f, 0.0f);
-    vec3_t best_position = forward_kinematics(angles.x, angles.y, angles.z);
+    vec3_t angles      = _current_angles;
+    vec3_t best_angles = _current_angles;
 
-    float best_error = feet_position_error(best_position, target_position);
+    float best_error = feet_position_error(_current_position, target_position);
     float error;
 
 #ifdef __IK_DEBUG
@@ -129,8 +131,8 @@ vec3_t Leg::inverse_kinematics(vec3_t target_position) {
             for (int j = 1; j <= n_nested_iters; j++) {
                 angles = best_angles + offsets[i_offset] * scale * j;
 
-                position = forward_kinematics(angles.x, angles.y, angles.z);
-                error    = feet_position_error(position, target_position);
+                vec3_t position = forward_kinematics(angles.x, angles.y, angles.z);
+                error           = feet_position_error(position, target_position);
 
                 if (error < best_error) {
 #ifdef __IK_DEBUG
@@ -143,9 +145,8 @@ vec3_t Leg::inverse_kinematics(vec3_t target_position) {
                     Serial.println(_buffer);
 #endif
 
-                    best_error    = error;
-                    best_angles   = angles;
-                    best_position = position;
+                    best_error  = error;
+                    best_angles = angles;
                 } else {
                     break;
                 }
@@ -195,29 +196,38 @@ float feet_position_error(vec3_t feet_position, vec3_t target_position) {
                 pow(feet_position.z - target_position.z, 2));
 }
 
-void Leg::move_feet_to(vec3_t feet_position) {
-    vec3_t angles = inverse_kinematics(feet_position);
+void Leg::set_target_foot_position(vec3_t feet_position) { _target_position = feet_position; }
 
-    move_joints(angles);
+void Leg::set_target_foot_position(float x, float y, float z) { _target_position = vec3_t(x, y, z); }
+
+void Leg::set_joint_angles(vec3_t angles) {
+    _current_angles   = angles;
+    _target_position  = forward_kinematics(angles);
+    _current_position = _target_position;
 }
 
-void Leg::move_feet_to(float x, float y, float z) {
-    vec3_t feet_position = vec3_t(x, y, z);
-    move_feet_to(feet_position);
-}
-
-void Leg::move_joints(vec3_t angles) {
-    if (_servos_enabled) {
-        _coxa->set_angle(angles.x);
-        _femur->set_angle(angles.y);
-        _tibia->set_angle(angles.z);
-    }
+void Leg::set_joint_angles(float coxa_angle, float femur_angle, float tibia_angle) {
+    _current_angles   = vec3_t(coxa_angle, femur_angle, tibia_angle);
+    _target_position  = forward_kinematics(coxa_angle, femur_angle, tibia_angle);
+    _current_position = _target_position;
 }
 
 void Leg::move_joints(float coxa_angle, float femur_angle, float tibia_angle) {
-    if (_servos_enabled) {
-        _coxa->set_angle(coxa_angle);
-        _femur->set_angle(femur_angle);
-        _tibia->set_angle(tibia_angle);
-    }
+    _coxa->set_angle(coxa_angle);
+    _femur->set_angle(femur_angle);
+    _tibia->set_angle(tibia_angle);
 }
+
+void Leg::move_joints(vec3_t angles) {
+    _coxa->set_angle(angles.x);
+    _femur->set_angle(angles.y);
+    _tibia->set_angle(angles.z);
+}
+
+vec3_t Leg::get_current_position() { return _current_position; }
+
+vec3_t Leg::get_target_position() { return _target_position; }
+
+vec3_t Leg::get_current_angles() { return _current_angles; }
+
+float Leg::get_error() { return feet_position_error(_current_position, _target_position); }
