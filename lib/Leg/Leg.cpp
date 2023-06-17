@@ -241,3 +241,8 @@ vec3_t Leg::get_target_position() { return _target_position; }
 vec3_t Leg::get_current_angles() { return _current_angles; }
 
 float Leg::get_error() { return feet_position_error(_current_position, _target_position); }
+
+
+float Leg::get_reach() {
+  return _current_position.mag();
+}

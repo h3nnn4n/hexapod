@@ -122,5 +122,7 @@ void loop() {
     serial_print_vec3(leg.get_current_angles());
     Serial.print("  |  error: ");
     Serial.print(leg.get_error());
+    Serial.print("  |  reach: ");
+    Serial.print(leg.get_reach());
     Serial.println();
 }

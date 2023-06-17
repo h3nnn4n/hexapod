@@ -39,6 +39,8 @@ class Leg {
     vec3_t get_current_angles();
     float  get_error();
 
+    float get_reach();
+
   private:
     Joint *_coxa;
     Joint *_femur;
