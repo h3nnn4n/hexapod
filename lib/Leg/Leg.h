@@ -22,7 +22,14 @@ class Leg {
     void enable_servos();
     void disable_servos();
 
+    void move_feet_to(vec3_t feet_position);
+    void move_feet_to(float x, float y, float z);
+
+    void move_joints(vec3_t angles);
+    void move_joints(float coxa_angle, float femur_angle, float tibia_angle);
+
     vec3_t forward_kinematics(float coxa_angle, float femur_angle, float tibia_angle);
+
     vec3_t inverse_kinematics(vec3_t feet_position);
     vec3_t inverse_kinematics(float feet_x, float feet_y, float feet_z);
 

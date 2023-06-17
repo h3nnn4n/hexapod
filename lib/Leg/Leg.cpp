@@ -28,10 +28,11 @@ Leg::Leg(Joint *coxa, Joint *femur, Joint *tibia) {
 
 void Leg::enable_servos() { _servos_enabled = true; }
 
-void Leg::disable_servos() { _servos_enabled = true; }
+void Leg::disable_servos() { _servos_enabled = false; }
 
 void Leg::init() {
-    // Nothing?
+    move_joints(0.0f, 0.0f, 0.0f);
+    //
 }
 
 void Leg::update() {
@@ -192,4 +193,31 @@ vec3_t Leg::inverse_kinematics(float feet_x, float feet_y, float feet_z) {
 float feet_position_error(vec3_t feet_position, vec3_t target_position) {
     return sqrt(pow(feet_position.x - target_position.x, 2) + pow(feet_position.y - target_position.y, 2) +
                 pow(feet_position.z - target_position.z, 2));
+}
+
+void Leg::move_feet_to(vec3_t feet_position) {
+    vec3_t angles = inverse_kinematics(feet_position);
+
+    move_joints(angles);
+}
+
+void Leg::move_feet_to(float x, float y, float z) {
+    vec3_t feet_position = vec3_t(x, y, z);
+    move_feet_to(feet_position);
+}
+
+void Leg::move_joints(vec3_t angles) {
+    if (_servos_enabled) {
+        _coxa->set_angle(angles.x);
+        _femur->set_angle(angles.y);
+        _tibia->set_angle(angles.z);
+    }
+}
+
+void Leg::move_joints(float coxa_angle, float femur_angle, float tibia_angle) {
+    if (_servos_enabled) {
+        _coxa->set_angle(coxa_angle);
+        _femur->set_angle(femur_angle);
+        _tibia->set_angle(tibia_angle);
+    }
 }

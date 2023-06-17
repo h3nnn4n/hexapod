@@ -60,6 +60,8 @@ void Joint::set_angle(float angle) {
     Serial.write(buffer);
 #endif
 
+    _current_angle = angle;
+
     write_us_to_servo(us);
 }
 
