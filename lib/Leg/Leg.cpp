@@ -7,11 +7,12 @@
 
 #include <math.h>
 
+#include <Utils.h>
 #include <VectorDatatype.h>
 
-#define COXA_LENGTH  100
-#define FEMUR_LENGTH 100
-#define TIBIA_LENGTH 100
+#define COXA_LENGTH  52
+#define FEMUR_LENGTH 78.984
+#define TIBIA_LENGTH 163.148
 
 Leg::Leg(Joint *coxa, Joint *femur, Joint *tibia) {
     _coxa  = coxa;
@@ -35,25 +36,34 @@ void Leg::update() {
     // Nothing?
 }
 
-// From https://www.ros.org/reps/rep-0103.html
-//
-// x forward
-// y left
-// z up
-
+/**
+ * @brief Calculates the forward kinematics for the leg.
+ *
+ * @param coxa_angle The coxa angle in degrees, from -90 to 90
+ * @param femur_angle The femur angle in degrees, from -90 to 90
+ * @param tibia_angle The tibia angle in degrees, from -90 to 90
+ *
+ * @return The feet position as a vec3_t
+ */
 vec3_t Leg::forward_kinematics(float coxa_angle, float femur_angle, float tibia_angle) {
-    vec3_t origin = vec3_t(0, 0, 0);
+    // From https://www.ros.org/reps/rep-0103.html
+    //
+    // x forward
+    // y left
+    // z up
 
-    float top_view_length = COXA_LENGTH + FEMUR_LENGTH * cos(femur_angle) + TIBIA_LENGTH * cos(tibia_angle);
+    coxa_angle  = degree_to_radian(coxa_angle);
+    femur_angle = degree_to_radian(femur_angle);
+    tibia_angle = degree_to_radian(tibia_angle);
 
-    vec3_t coxa_position = vec3_t(COXA_LENGTH * sin(coxa_angle), COXA_LENGTH * cos(coxa_angle), 0);
+    vec3_t feet_position = vec3_t(0.0f, 0.0f, 0.0f);
 
-    vec3_t femur_position = vec3_t(coxa_position.x, coxa_position.y + FEMUR_LENGTH, FEMUR_LENGTH * sin(femur_angle));
+    const float leg_length_top_view =
+        COXA_LENGTH + cos(femur_angle) * FEMUR_LENGTH + cos(tibia_angle - femur_angle) * TIBIA_LENGTH;
 
-    float knee_height     = femur_position.z + FEMUR_LENGTH * sin(femur_angle);
-    float fee_height_loss = 0;
-
-    vec3_t feet_position = vec3_t(top_view_length * sin(coxa_angle), top_view_length * cos(coxa_angle), 0);
+    feet_position.x = sin(coxa_angle) * leg_length_top_view;
+    feet_position.y = cos(coxa_angle) * leg_length_top_view;
+    feet_position.z = sin(femur_angle) * FEMUR_LENGTH + sin(tibia_angle - femur_angle) * TIBIA_LENGTH;
 
     return feet_position;
 }

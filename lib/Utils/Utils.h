@@ -12,4 +12,7 @@ void print_vec3(char *buffer, vec3_t v);
 void serial_print_vec3(vec3_t v);
 void serial_println_vec3(vec3_t v);
 
+float degree_to_radian(float degree);
+float radian_to_degree(float radian);
+
 #endif  // LIB_UTILS_UTILS_H_

@@ -5,6 +5,8 @@
 
 #include "Utils.h"
 
+#include <math.h>
+
 #include <VectorDatatype.h>
 
 const size_t BUFFER_SIZE = 100;
@@ -32,3 +34,7 @@ void serial_println_vec3(vec3_t v) {
     serial_print_vec3(v);
     Serial.write("\n");
 }
+
+float degree_to_radian(float degree) { return degree * (M_PI / 180.0f); }
+
+float radian_to_degree(float radian) { return radian * (180.0f / M_PI); }

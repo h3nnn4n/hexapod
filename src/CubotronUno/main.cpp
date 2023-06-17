@@ -23,6 +23,11 @@ Joint tibia = Joint(&pca, 6);
 Joint femur = Joint(&pca, 5);
 Joint coxa  = Joint(&pca, 4);
 
+Leg leg = Leg(&coxa, &femur, &tibia);
+
+char buffer[100];
+char f_buffer[10];
+
 void update_angles();
 
 void setup() {

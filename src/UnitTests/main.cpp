@@ -18,20 +18,41 @@
 
 #include <AUnit.h>
 
-char buffer[100];
+char        buffer[100];
+const float eps = 0.01f;
 
 Leg leg = Leg(nullptr, nullptr, nullptr);
 
 test(foo) { assertEqual(2 + 2, 4); }
 
-test(fk) {
+test(fk_resting_position) {
     vec3_t result = leg.forward_kinematics(0, 0, 0);
 
     serial_println_vec3(result);
 
-    assertEqual(result.x, 0.0);
-    assertEqual(result.y, 300.0);
-    assertEqual(result.z, 0.0);
+    assertNear(result.x, 0.0f, eps);
+    assertNear(result.y, 294.13f, eps);
+    assertNear(result.z, 0.0f, eps);
+}
+
+test(fk_full_front) {
+    vec3_t result = leg.forward_kinematics(90, 0, 0);
+
+    serial_println_vec3(result);
+
+    assertNear(result.x, 294.13f, eps);
+    assertNear(result.y, 0.0f, eps);
+    assertNear(result.z, 0.0f, eps);
+}
+
+test(fk_45_forward) {
+    vec3_t result = leg.forward_kinematics(45, 0, 0);
+
+    serial_println_vec3(result);
+
+    assertNear(result.x, 207.98f, eps);
+    assertNear(result.y, 207.98f, eps);
+    assertNear(result.z, 0.0f, eps);
 }
 
 void setup() {
