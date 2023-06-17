@@ -40,14 +40,7 @@ void Joint::set_angle(float angle) {
     if (angle == _current_angle)
         return;
 
-    // FIXME: Many of these could be pre computed and stored
-    uint16_t angle_range = _servo_max_angle - _servo_min_angle;
-    uint16_t us_range    = _max_us - _min_us;
-    uint16_t middle_us   = us_range / 2;
-
-    double us_per_angle = us_range / angle_range;
-
-    uint16_t us = _min_us + middle_us + angle * us_per_angle;
+    uint16_t us = map(angle, _servo_min_angle, _servo_max_angle, _min_us, _max_us);
 
 #ifdef __DEBUG
     snprintf(buffer, sizeof(buffer), "servo_id=%3d ", _servo_id);
@@ -55,8 +48,13 @@ void Joint::set_angle(float angle) {
     dtostrf(angle, 6, 2, f_buffer);
     snprintf(buffer, sizeof(buffer), "angle=%s ", f_buffer);
     Serial.write(buffer);
-    dtostrf(us_per_angle, 6, 2, f_buffer);
-    snprintf(buffer, sizeof(buffer), "us_per_angle=%s us=%d\n", f_buffer, us);
+    dtostrf(_servo_min_angle, 6, 2, f_buffer);
+    snprintf(buffer, sizeof(buffer), " min_angle=%s ", f_buffer);
+    Serial.write(buffer);
+    dtostrf(_servo_max_angle, 6, 2, f_buffer);
+    snprintf(buffer, sizeof(buffer), "max_angle=%s  ", f_buffer);
+    Serial.write(buffer);
+    snprintf(buffer, sizeof(buffer), "us=%d\n", us);
     Serial.write(buffer);
 #endif
 
