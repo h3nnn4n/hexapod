@@ -57,7 +57,10 @@ void loop() {
     blinkenlights.update();
 
     float angle = sin(millis() / 1000.0f) * 90.0f;
+
+#ifdef LEG_SWIPE
     tibia.set_angle(angle);
     femur.set_angle(angle * 0.35f);
     coxa.set_angle(angle);
+#endif
 }
