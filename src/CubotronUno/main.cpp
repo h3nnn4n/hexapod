@@ -51,6 +51,8 @@ void setup() {
     coxa.set_angle_range(-90.0f, 90.0f);
     femur.set_angle_range(-90.0f, 90.0f);
     tibia.set_angle_range(-90.0f, 90.0f);
+
+    leg.init();
 }
 
 void loop() {
