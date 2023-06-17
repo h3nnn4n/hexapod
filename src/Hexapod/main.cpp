@@ -13,6 +13,7 @@
 #include <Leg.h>
 #include <PWMServoDriver.h>
 #include <VectorDatatype.h>
+#include <Utils.h>
 #include <Wire.h>
 
 BlinkenLights blinkenlights = BlinkenLights();
@@ -58,9 +59,8 @@ void setup() {
 void loop() {
     blinkenlights.update();
 
-    float angle = sin(millis() / 1000.0f) * 90.0f;
-
 #ifdef LEG_SWIPE
+    float angle = sin(millis() / 1000.0f) * 90.0f;
     tibia.set_angle(angle);
     femur.set_angle(angle * 0.35f);
     coxa.set_angle(angle);
