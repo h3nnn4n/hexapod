@@ -5,6 +5,8 @@
 
 #include "leg.h"
 
+#include <math.h>
+
 #include <VectorDatatype.h>
 
 #define COXA_LENGTH  100
@@ -20,6 +22,10 @@ Leg::Leg(Joint *coxa, Joint *femur, Joint *tibia) {
     _joints[1] = _femur;
     _joints[2] = _tibia;
 }
+
+void Leg::enable_servos() { _servos_enabled = true; }
+
+void Leg::disable_servos() { _servos_enabled = true; }
 
 void Leg::init() {
     // Nothing?
@@ -43,12 +49,11 @@ vec3_t Leg::forward_kinematics(float coxa_angle, float femur_angle, float tibia_
     vec3_t coxa_position = vec3_t(COXA_LENGTH * sin(coxa_angle), COXA_LENGTH * cos(coxa_angle), 0);
 
     vec3_t femur_position = vec3_t(coxa_position.x, coxa_position.y + FEMUR_LENGTH, FEMUR_LENGTH * sin(femur_angle));
-    vec3_t tibia_position = vec3_t(0, 0, 0);
 
     float knee_height     = femur_position.z + FEMUR_LENGTH * sin(femur_angle);
     float fee_height_loss = 0;
 
     vec3_t feet_position = vec3_t(top_view_length * sin(coxa_angle), top_view_length * cos(coxa_angle), 0);
 
-    return tibia_position;
+    return feet_position;
 }

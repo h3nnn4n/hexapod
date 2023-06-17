@@ -19,6 +19,8 @@ class Leg {
 
     void   init();
     void   update();
+    void   enable_servos();
+    void   disable_servos();
     vec3_t forward_kinematics(float coxa_angle, float femur_angle, float tibia_angle);
 
   private:
@@ -27,6 +29,8 @@ class Leg {
     Joint *_tibia;
 
     Joint *_joints[3];
+
+    bool _servos_enabled = false;
 };
 
 #endif  // LIB_LEG_LEG_H_
