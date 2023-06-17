@@ -150,3 +150,9 @@ vec3_t vec3_t::norm() {
     vec3_t v = {x, y, z};
     return v / mag();
 }
+
+//------------------- Stuff? -------------------
+
+vec3_t vec3_lerp(vec3_t a, vec3_t b, float p) {
+    return vec3_t(a.x + (b.x - a.x) * p, a.y + (b.y - a.y) * p, a.z + (b.z - a.z) * p);
+}

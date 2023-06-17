@@ -50,4 +50,7 @@ struct vec3_t {
 // 1B. Reverse order - Scalar product
 vec3_t operator*(const float, const vec3_t &);
 
+// Stuff?
+vec3_t vec3_lerp(vec3_t a, vec3_t b, float p);
+
 #endif
