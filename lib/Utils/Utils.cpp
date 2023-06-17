@@ -18,9 +18,9 @@ char f_buffer_z[10];
 char _buffer[BUFFER_SIZE];
 
 void print_vec3(char *buffer, size_t n, vec3_t v) {
-    dtostrf(v.x, 6, 2, f_buffer_x);
-    dtostrf(v.y, 6, 2, f_buffer_y);
-    dtostrf(v.z, 6, 2, f_buffer_z);
+    dtostrf(v.x, 6, 3, f_buffer_x);
+    dtostrf(v.y, 6, 3, f_buffer_y);
+    dtostrf(v.z, 6, 3, f_buffer_z);
 
     snprintf(buffer, n, "x=%s y=%s z=%s", f_buffer_x, f_buffer_y, f_buffer_z);
 }

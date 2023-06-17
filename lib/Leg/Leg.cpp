@@ -63,7 +63,8 @@ vec3_t Leg::forward_kinematics(float coxa_angle, float femur_angle, float tibia_
 
     feet_position.x = sin(coxa_angle) * leg_length_top_view;
     feet_position.y = cos(coxa_angle) * leg_length_top_view;
-    feet_position.z = sin(femur_angle) * FEMUR_LENGTH + sin(tibia_angle - femur_angle) * TIBIA_LENGTH;
+    // FIXME: There is something wrong with the z position (some flipped angle?)
+    feet_position.z = sin(femur_angle) * FEMUR_LENGTH - sin(tibia_angle - femur_angle) * TIBIA_LENGTH;
 
     return feet_position;
 }
