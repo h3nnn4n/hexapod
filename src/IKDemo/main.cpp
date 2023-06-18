@@ -59,8 +59,10 @@ void setup() {
     leg.init();
     leg.set_tolerance(2.5);
     leg.enable_servos();
-    leg.set_joint_angles(0, 0, 0);
-    leg.set_target_foot_position(positions[0]);
+    leg.set_joint_angles(0, 90, 180);
+    leg.update();
+
+    delay(250);
 
     now               = millis();
     last_time         = millis();
