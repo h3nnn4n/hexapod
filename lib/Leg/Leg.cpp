@@ -33,12 +33,17 @@ void Leg::disable_servos() { _servos_enabled = false; }
 void Leg::init() { set_joint_angles(0.0f, 0.0f, 0.0f); }
 
 void Leg::update() {
-    _current_angles   = inverse_kinematics(_target_position);
-    _current_position = forward_kinematics(_current_angles);
+    bool needs_update = get_error() > 1.0f;
+
+    if (needs_update)
+        _current_angles = inverse_kinematics(_target_position);
 
     if (_servos_enabled) {
         move_joints(_current_angles);
     }
+
+    if (needs_update)
+        _current_position = forward_kinematics(_current_angles);
 }
 
 /**
@@ -242,7 +247,4 @@ vec3_t Leg::get_current_angles() { return _current_angles; }
 
 float Leg::get_error() { return feet_position_error(_current_position, _target_position); }
 
-
-float Leg::get_reach() {
-  return _current_position.mag();
-}
+float Leg::get_reach() { return _current_position.mag(); }
