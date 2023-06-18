@@ -24,7 +24,12 @@ Joint coxa  = Joint(&pca, 4);
 Joint femur = Joint(&pca, 5);
 Joint tibia = Joint(&pca, 6);
 
-Leg leg = Leg(&coxa, &femur, &tibia);
+Joint min_angle = Joint(&pca, 0);
+Joint mid_angle = Joint(&pca, 1);
+Joint max_angle = Joint(&pca, 2);
+
+Leg leg        = Leg(&coxa, &femur, &tibia);
+Leg leg_angles = Leg(&min_angle, &mid_angle, &max_angle);
 
 void setup() {
     blinkenlights.init();
@@ -41,6 +46,15 @@ void setup() {
     leg.set_joint_angles(0, 90, 180);
     leg.enable_servos();
     leg.update();
+
+    min_angle.set_angle_range(-90.0f, 90.0f);
+    mid_angle.set_angle_range(-90.0f, 90.0f);
+    max_angle.set_angle_range(-90.0f, 90.0f);
+
+    leg_angles.init();
+    leg_angles.set_joint_angles(-90, 0, 90);
+    leg_angles.enable_servos();
+    leg_angles.update();
 }
 
 void loop() { blinkenlights.update(); }
