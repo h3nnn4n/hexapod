@@ -50,8 +50,6 @@ class Leg {
     Joint *_femur;
     Joint *_tibia;
 
-    Joint *_joints[3];
-
     bool _servos_enabled = false;
 
     vec3_t _current_position;

@@ -20,13 +20,12 @@ Leg::Leg(Joint *coxa, Joint *femur, Joint *tibia) {
     _coxa  = coxa;
     _femur = femur;
     _tibia = tibia;
-
-    _joints[0] = _coxa;
-    _joints[1] = _femur;
-    _joints[2] = _tibia;
 }
 
-void Leg::enable_servos() { _servos_enabled = true; }
+void Leg::enable_servos() {
+    _servos_enabled = true;
+    move_joints(_current_angles);
+}
 
 void Leg::disable_servos() { _servos_enabled = false; }
 
@@ -38,9 +37,7 @@ void Leg::update() {
     if (needs_update)
         _current_angles = inverse_kinematics(_target_position);
 
-    if (_servos_enabled) {
-        move_joints(_current_angles);
-    }
+    move_joints(_current_angles);
 
     if (needs_update)
         _current_position = forward_kinematics(_current_angles);
@@ -223,21 +220,24 @@ void Leg::set_joint_angles(vec3_t angles) {
     _current_angles   = angles;
     _target_position  = forward_kinematics(angles);
     _current_position = _target_position;
+
+    move_joints(angles);
 }
 
 void Leg::set_joint_angles(float coxa_angle, float femur_angle, float tibia_angle) {
-    _current_angles   = vec3_t(coxa_angle, femur_angle, tibia_angle);
-    _target_position  = forward_kinematics(coxa_angle, femur_angle, tibia_angle);
-    _current_position = _target_position;
+    vec3_t angles = vec3_t(coxa_angle, femur_angle, tibia_angle);
+    set_joint_angles(angles);
 }
 
 void Leg::move_joints(float coxa_angle, float femur_angle, float tibia_angle) {
-    _coxa->set_angle(coxa_angle);
-    _femur->set_angle(femur_angle);
-    _tibia->set_angle(tibia_angle);
+    vec3_t angles = vec3_t(coxa_angle, femur_angle, tibia_angle);
+    move_joints(angles);
 }
 
 void Leg::move_joints(vec3_t angles) {
+    if (!_servos_enabled)
+        return;
+
     _coxa->set_angle(angles.x);
     _femur->set_angle(angles.y);
     _tibia->set_angle(angles.z);
