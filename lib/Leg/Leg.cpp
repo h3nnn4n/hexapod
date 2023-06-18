@@ -103,6 +103,8 @@ vec3_t Leg::inverse_kinematics(vec3_t target_position) {
     char _buffer[100];
 #endif
 
+    uint64_t start_time = millis();
+
     const uint16_t n_iters        = 25;
     const uint8_t  n_offsets      = 6;
     const uint8_t  n_nested_iters = 10;
@@ -170,6 +172,9 @@ vec3_t Leg::inverse_kinematics(vec3_t target_position) {
                 }
             }
         }
+
+        if (millis() - start_time > _timeout_ms)
+            goto end;
     }
 
 #ifdef __IK_DEBUG
@@ -249,3 +254,5 @@ float Leg::get_error() { return feet_position_error(_current_position, _target_p
 float Leg::get_reach() { return _current_position.mag(); }
 
 void Leg::set_tolerance(float tolerance) { _tolerance = tolerance; }
+
+void Leg::set_timeout(uint16_t timeout_ms) { _timeout_ms = timeout_ms; }

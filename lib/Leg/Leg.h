@@ -43,6 +43,8 @@ class Leg {
 
     float get_reach();
 
+    void set_timeout(uint16_t timeout_ms);
+
   private:
     Joint *_coxa;
     Joint *_femur;
@@ -57,7 +59,8 @@ class Leg {
 
     vec3_t _current_angles;
 
-    float _tolerance = 1.0f;
+    float    _tolerance  = 1.0f;
+    uint16_t _timeout_ms = 50;
 
     void move_joints(vec3_t angles);
     void move_joints(float coxa_angle, float femur_angle, float tibia_angle);
