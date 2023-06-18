@@ -33,7 +33,7 @@ void Leg::disable_servos() { _servos_enabled = false; }
 void Leg::init() { set_joint_angles(0.0f, 0.0f, 0.0f); }
 
 void Leg::update() {
-    bool needs_update = get_error() > 1.0f;
+    bool needs_update = get_error() > _tolerance;
 
     if (needs_update)
         _current_angles = inverse_kinematics(_target_position);
@@ -106,7 +106,6 @@ vec3_t Leg::inverse_kinematics(vec3_t target_position) {
     const uint16_t n_iters        = 25;
     const uint8_t  n_offsets      = 6;
     const uint8_t  n_nested_iters = 10;
-    const float    target_error   = 0.1f;
     float          scale          = 0.5f;
 
     const vec3_t offsets[] = {
@@ -166,7 +165,7 @@ vec3_t Leg::inverse_kinematics(vec3_t target_position) {
                     break;
                 }
 
-                if (best_error <= target_error) {
+                if (best_error <= _tolerance) {
                     goto end;
                 }
             }
@@ -248,3 +247,5 @@ vec3_t Leg::get_current_angles() { return _current_angles; }
 float Leg::get_error() { return feet_position_error(_current_position, _target_position); }
 
 float Leg::get_reach() { return _current_position.mag(); }
+
+void Leg::set_tolerance(float tolerance) { _tolerance = tolerance; }

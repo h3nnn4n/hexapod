@@ -22,6 +22,8 @@ class Leg {
     void enable_servos();
     void disable_servos();
 
+    void set_tolerance(float tolerance);
+
     void set_target_foot_position(vec3_t feet_position);
     void set_target_foot_position(float x, float y, float z);
 
@@ -54,6 +56,8 @@ class Leg {
     vec3_t _target_position;
 
     vec3_t _current_angles;
+
+    float _tolerance = 1.0f;
 
     void move_joints(vec3_t angles);
     void move_joints(float coxa_angle, float femur_angle, float tibia_angle);

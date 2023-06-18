@@ -57,6 +57,7 @@ void setup() {
     tibia.set_angle_range(0.0f, 180.0f);
 
     leg.init();
+    leg.set_tolerance(2.5);
     leg.enable_servos();
     leg.set_joint_angles(0, 0, 0);
     leg.set_target_foot_position(positions[0]);
