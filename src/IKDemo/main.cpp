@@ -26,11 +26,22 @@ Joint coxa  = Joint(&pca, 4);
 
 Leg leg = Leg(&coxa, &femur, &tibia);
 
-char buffer[400];
+const size_t buffer_size = 256;
+
+char buffer[buffer_size];
 char f_buffer[10];
 
 vec3_t positions[] = {
-    {0, 290, 0}, {0, 250, 0}, {0, 250, 50}, {0, 250, -50}, {0, 250, 0},
+    // Vertical Square
+    //{100, 210, 50},    //
+    //{-100, 210, 50},   //
+    //{-100, 210, -75},  //
+    //{100, 210, -75},   //
+
+    // Triangle walk cycle
+    {-100, 135, -90},  //
+    {100, 135, -90},   //
+    {0, 135, -65},     //
 };
 
 uint16_t current_position_i = 0;
@@ -73,14 +84,11 @@ void setup() {
 void loop() {
     blinkenlights.update();
 
-    now        = millis();
-    auto delta = now - last_time;
-    last_time  = now;
+    now       = millis();
+    int delta = now - last_time;
+    last_time = now;
 
     timer -= delta;
-
-    // snprintf(buffer, sizeof(buffer), "timer: %4d  delta: %4d  now: %ld  last_time:  %ld", timer, delta, now,
-    // last_time); Serial.println(buffer);
 
     if (timer <= 0) {
         Serial.println("\nmoving to new position");
@@ -108,7 +116,7 @@ void loop() {
     leg.set_target_foot_position(target_position);
     leg.update();
 
-    snprintf(buffer, sizeof(buffer), "timer: %4d  ", timer);
+    snprintf(buffer, buffer_size, "dt: %4dms", delta);
     Serial.print(buffer);
     Serial.print("  ");
     Serial.print("p: ");
