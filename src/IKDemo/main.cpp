@@ -39,19 +39,22 @@ vec3_t positions[] = {
     //{100, 210, -75},   //
 
     // Triangle walk cycle
+    {0, 135, -65},     //
     {-100, 135, -90},  //
     {100, 135, -90},   //
-    {0, 135, -65},     //
 };
 
 uint16_t current_position_i = 0;
 uint16_t target_position_i  = 1;
 
+vec3_t current_position = {0, 0, 0};
+vec3_t position_delta   = {0, 0, 0};
+
+const float speed              = 100.0f;
+float       distance_to_target = 0.0f;
+
 unsigned long long last_time = 0;
 unsigned long long now       = 0;
-
-int32_t  timer                  = 0;
-uint32_t time_between_positions = 2000;
 
 void setup() {
     Serial.begin(115200);
@@ -75,25 +78,23 @@ void setup() {
 
     delay(250);
 
-    now               = millis();
-    last_time         = millis();
-    timer             = time_between_positions;
-    target_position_i = current_position_i + 1;
+    now                = millis();
+    last_time          = millis();
+    target_position_i  = current_position_i + 1;
+    current_position   = positions[current_position_i];
+    position_delta     = (positions[target_position_i] - positions[current_position_i]).norm() * speed;
+    distance_to_target = (positions[target_position_i] - positions[current_position_i]).mag();
 }
 
 void loop() {
     blinkenlights.update();
 
-    now       = millis();
-    int delta = now - last_time;
-    last_time = now;
+    now         = millis();
+    float delta = (now - last_time) / 1000.0f;
+    last_time   = now;
 
-    timer -= delta;
-
-    if (timer <= 0) {
+    if (distance_to_target <= 0) {
         Serial.println("\nmoving to new position");
-
-        timer = time_between_positions;
 
         current_position_i++;
 
@@ -106,31 +107,33 @@ void loop() {
         if (target_position_i >= sizeof(positions) / sizeof(vec3_t)) {
             target_position_i = 0;
         }
+
+        position_delta     = (positions[target_position_i] - positions[current_position_i]).norm() * speed;
+        current_position   = positions[current_position_i];  // To fix any drift
+        distance_to_target = (positions[target_position_i] - positions[current_position_i]).mag();
     }
 
-    float p = (float)timer / (float)time_between_positions;
-    p       = 1.0f - p;
+    vec3_t step = position_delta * delta;
+    distance_to_target -= step.mag();
+    current_position += step;
 
-    vec3_t target_position = vec3_lerp(positions[current_position_i], positions[target_position_i], p);
-
-    leg.set_target_foot_position(target_position);
+    leg.set_target_foot_position(current_position);
     leg.update();
 
-    snprintf(buffer, buffer_size, "dt: %4dms", delta);
+    snprintf(buffer, buffer_size, "dt:%4d ms", uint16_t(delta * 1000.0f));
     Serial.print(buffer);
-    Serial.print("  ");
-    Serial.print("p: ");
-    Serial.print(p);
-    Serial.print("  ");
+    Serial.print(" ");
     Serial.print(current_position_i);
     Serial.print("/");
     Serial.print(target_position_i);
+    Serial.print("  |  step: ");
+    serial_print_vec3(step);
     Serial.print("  |  current: ");
     serial_print_vec3(leg.get_current_position());
-    Serial.print("  |  target: ");
-    serial_print_vec3(leg.get_target_position());
-    Serial.print("  |  angles: ");
-    serial_print_vec3(leg.get_current_angles());
+    // Serial.print("  |  target: ");
+    // serial_print_vec3(leg.get_target_position());
+    // Serial.print("  |  angles: ");
+    // serial_print_vec3(leg.get_current_angles());
     Serial.print("  |  error: ");
     Serial.print(leg.get_error());
     Serial.print("  |  reach: ");
