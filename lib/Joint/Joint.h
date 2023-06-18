@@ -31,7 +31,7 @@ class Joint {
     float max_angle = 90;
 
   private:
-    float _current_angle = 0;
+    float _current_angle = -999;
 
     PWMServoDriver *_servo_driver;
     uint8_t         _servo_id;
