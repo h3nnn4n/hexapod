@@ -127,11 +127,29 @@ vec3_t Leg::inverse_kinematics(vec3_t target_position) {
     Serial.print("target position: ");
     serial_println_vec3(target_position);
     Serial.println();
+
+    // Serial.print("n_iters: ");
+    // Serial.print(n_iters);
+    // Serial.print("  i_offset: ");
+    // Serial.print(n_offsets);
+    // Serial.print("  n_nested_iters: ");
+    // Serial.println(n_nested_iters);
+    // Serial.print("total: ");
+    // Serial.println(n_iters * n_offsets * n_nested_iters);
 #endif
 
     for (uint16_t i = 0; i < n_iters; i++) {
         for (uint16_t i_offset = 0; i_offset < n_offsets; i_offset++) {
             for (int j = 1; j <= n_nested_iters; j++) {
+#ifdef __IK_DEBUG
+                // Serial.print("i: ");
+                // Serial.print(i);
+                // Serial.print("  i_offset: ");
+                // Serial.print(i_offset);
+                // Serial.print("  j: ");
+                // Serial.println(j);
+#endif
+
                 angles = best_angles + offsets[i_offset] * scale * j;
 
                 if (angles.x < _coxa->min_angle || angles.x > _coxa->max_angle) {
