@@ -29,7 +29,10 @@ void Leg::enable_servos() {
 
 void Leg::disable_servos() { _servos_enabled = false; }
 
-void Leg::init() { set_joint_angles(0.0f, 0.0f, 0.0f); }
+void Leg::init() {
+    set_joint_angles(0.0f, 0.0f, 0.0f);
+    _current_position = forward_kinematics(_current_angles);
+}
 
 void Leg::update() {
     bool needs_update = get_error() > _tolerance;
