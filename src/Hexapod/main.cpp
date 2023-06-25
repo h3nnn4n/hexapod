@@ -3,6 +3,7 @@
  *
  */
 
+#include <cstdint>
 #include <stdint.h>
 
 #include <Config.h>
@@ -108,14 +109,31 @@ void setup() {
     femur6.set_angle_range(-90.0f, 90.0f);
     tibia6.set_angle_range(0.0f, 180.0f);
 
+    // XXX: !?
+    leg4.set_flip_axis(true);
+    leg5.set_flip_axis(true);
+    leg6.set_flip_axis(true);
+
     for (auto leg : legs) {
         leg->init();
-        // leg->set_tolerance(2.5f);
         leg->set_tolerance(1.0f);
         leg->set_joint_angles(coxa_start_angle, femur_start_angle, tibia_start_angle);
+        // leg->disable_servos();
         leg->enable_servos();
         leg->update();
     }
+
+    // Two back legs
+    // leg1.enable_servos();
+    // leg4.enable_servos();
+
+    // Two middle legs
+    // leg2.enable_servos();
+    // leg5.enable_servos();
+
+    // Two front legs
+    // leg3.enable_servos();
+    // leg6.enable_servos();
 
     now       = millis();
     last_time = millis();
@@ -128,14 +146,30 @@ void loop() {
     float delta = (now - last_time) / 1000.0f;
     last_time   = now;
 
-    float f       = millis() / 1000.0f;
-    float offset1 = sin(f) * 50.0f;
-    float offset2 = cos(f) * 25.0f * 0.0;
+    float f = millis() / 1000.0f;
 
-    target_position = vec3_t(0.0f + offset2, 70.0f, -140.0f + offset1);
+    // float x = 0.0f + cos(f) * 25.0f * 1.0f;
+    // float y = 70.0f + sin(f) * 25.0f * 0.0f;
+    // float z = -140.0f + sin(f) * 50.0f * 0.0f;
 
-    for (auto leg : legs) {
+    float x = 0.0f + cos(f) * 25.0f * 1.0f;
+    float y = 250.0f + sin(f) * 50.0f * 0.0f;
+    float z = 0.0f + sin(f) * 50.0f * 0.0f;
+
+    target_position = vec3_t(x, y, z);
+    // target_position = vec3_t(0, 250, 0);
+
+    for (uint_fast8_t i = 0; i < n_legs; i++) {
+        auto leg = legs[i];
+
+        if (i == 2 || i == 5) {
+            leg->set_target_foot_position(0, 250, 0);
+        } else {
+            leg->set_target_foot_position(target_position);
+        }
+
         leg->set_target_foot_position(target_position);
+
         leg->update();
     }
 
@@ -143,14 +177,14 @@ void loop() {
     Serial.print(buffer);
     Serial.print(" ");
     Serial.print("  |  current: ");
-    serial_print_vec3(leg1.get_current_position());
+    serial_print_vec3(leg6.get_current_position());
     Serial.print("  |  target: ");
-    serial_print_vec3(leg1.get_target_position());
+    serial_print_vec3(leg6.get_target_position());
     Serial.print("  |  angles: ");
-    serial_print_vec3(leg1.get_current_angles());
+    serial_print_vec3(leg6.get_current_angles());
     Serial.print("  |  error: ");
-    Serial.print(leg1.get_error());
+    Serial.print(leg6.get_error());
     Serial.print("  |  reach: ");
-    Serial.print(leg1.get_reach());
+    Serial.print(leg6.get_reach());
     Serial.println();
 }
