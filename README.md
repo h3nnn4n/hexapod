@@ -1,9 +1,18 @@
-# Cubotron IRL
+# Aratu Hexapod
 
-The next step of [Cubotron](https://github.com/h3nnn4n/cubotron). The first
-part of the project took care of finding a solution for a scrambled cube
-relativelly fast. This repo contains the "IRL" part of it, which will
-manipulate the cube in order to solve it.
+The brains for the Aratu Hexapod.
+
+## Developing
+
+- Arduino should work out of the box with no changes
+
+- For teensy 4.1 some changes are required:
+  - The Makefile needs to include `Teensy.mk` instead of `Arduino.mk`
+  - `ARDUINO_CORE_PATH`  in `Teensy.mk` needs to be updated to point to the `teensy4` core
+  - `boards.txt` needs to be updated:
+    - Set `teensy41.upload.maximum_data_size` and `teensy41.upload.maximum_size`
+    - Add `-DARDUINO_TEENSY41` to `teensy41.build.flags.defs=`
+    - Set `teensy41.build.mcu` to `imxrt1062_t41`
 
 # Credits
 
