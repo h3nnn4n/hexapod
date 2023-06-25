@@ -119,11 +119,6 @@ vec3_t Leg::inverse_kinematics(vec3_t target_position) {
     vec3_t angles      = _current_angles;
     vec3_t best_angles = _current_angles;
 
-    // Flip the x axis if the leg is on the right side
-    if (_flip_axis) {
-        target_position.x = 0.0f - target_position.x;
-    }
-
     float best_error = feet_position_error(_current_position, target_position);
     float error;
 
@@ -240,7 +235,14 @@ float feet_position_error(vec3_t feet_position, vec3_t target_position) {
 
 void Leg::set_target_foot_position(vec3_t feet_position) { _target_position = feet_position; }
 
-void Leg::set_target_foot_position(float x, float y, float z) { _target_position = vec3_t(x, y, z); }
+void Leg::set_target_foot_position(float x, float y, float z) {
+    _target_position = vec3_t(x, y, z);
+
+    // Flip the x axis if the leg is on the right side
+    if (_flip_axis) {
+        _target_position.x = 0.0f - _target_position.x;
+    }
+}
 
 void Leg::set_joint_angles(vec3_t angles) {
     _current_angles   = angles;
