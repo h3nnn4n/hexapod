@@ -119,6 +119,11 @@ vec3_t Leg::inverse_kinematics(vec3_t target_position) {
     vec3_t angles      = _current_angles;
     vec3_t best_angles = _current_angles;
 
+    // Flip the x axis if the leg is on the right side
+    if (_flip_axis) {
+        target_position.x = 0.0f - target_position.x;
+    }
+
     float best_error = feet_position_error(_current_position, target_position);
     float error;
 
@@ -277,3 +282,5 @@ float Leg::get_reach() { return _current_position.mag(); }
 void Leg::set_tolerance(float tolerance) { _tolerance = tolerance; }
 
 void Leg::set_timeout(uint16_t timeout_ms) { _timeout_ms = timeout_ms; }
+
+void Leg::set_flip_axis(bool flip_axis) { _flip_axis = flip_axis; }

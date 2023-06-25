@@ -23,6 +23,7 @@ class Leg {
     void disable_servos();
 
     void set_tolerance(float tolerance);
+    void set_flip_axis(bool flip_axis);
 
     void set_target_foot_position(vec3_t feet_position);
     void set_target_foot_position(float x, float y, float z);
@@ -51,6 +52,7 @@ class Leg {
     Joint *_tibia;
 
     bool _servos_enabled = false;
+    bool _flip_axis      = false;
 
     vec3_t _current_position;
     vec3_t _target_position;
