@@ -233,15 +233,18 @@ float feet_position_error(vec3_t feet_position, vec3_t target_position) {
                 pow(feet_position.z - target_position.z, 2));
 }
 
-void Leg::set_target_foot_position(vec3_t feet_position) { _target_position = feet_position; }
-
-void Leg::set_target_foot_position(float x, float y, float z) {
-    _target_position = vec3_t(x, y, z);
+void Leg::set_target_foot_position(vec3_t feet_position) {
+    _target_position = feet_position;
 
     // Flip the x axis if the leg is on the right side
     if (_flip_axis) {
         _target_position.x = 0.0f - _target_position.x;
     }
+}
+
+void Leg::set_target_foot_position(float x, float y, float z) {
+    vec3_t position = vec3_t(x, y, z);
+    set_target_foot_position(position);
 }
 
 void Leg::set_joint_angles(vec3_t angles) {
