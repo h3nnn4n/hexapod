@@ -72,8 +72,13 @@ Leg *legs[n_legs] = {
 
 vec3_t target_position;
 
+void set_cmd(String cmd);
+void parse_leg_position_cmd(String cmd);
+void read_serial();
+
 void setup() {
     Serial.begin(115200);
+    Serial.setTimeout(50);
     Serial.println("starting...");
 
     blinkenlights.init();
@@ -118,22 +123,9 @@ void setup() {
         leg->init();
         leg->set_tolerance(1.0f);
         leg->set_joint_angles(coxa_start_angle, femur_start_angle, tibia_start_angle);
-        // leg->disable_servos();
-        leg->enable_servos();
+        leg->disable_servos();
         leg->update();
     }
-
-    // Two back legs
-    // leg1.enable_servos();
-    // leg4.enable_servos();
-
-    // Two middle legs
-    // leg2.enable_servos();
-    // leg5.enable_servos();
-
-    // Two front legs
-    // leg3.enable_servos();
-    // leg6.enable_servos();
 
     now       = millis();
     last_time = millis();
@@ -148,30 +140,13 @@ void loop() {
 
     float f = millis() / 1000.0f;
 
-    // float x = 0.0f + cos(f) * 25.0f * 1.0f;
-    // float y = 70.0f + sin(f) * 25.0f * 0.0f;
-    // float z = -140.0f + sin(f) * 50.0f * 0.0f;
+    read_serial();
 
-    float x = 0.0f + cos(f) * 25.0f * 1.0f;
-    float y = 250.0f + sin(f) * 50.0f * 0.0f;
-    float z = 0.0f + sin(f) * 50.0f * 0.0f;
-
-    target_position = vec3_t(x, y, z);
-    // target_position = vec3_t(0, 250, 0);
-
-    for (uint_fast8_t i = 0; i < n_legs; i++) {
-        auto leg = legs[i];
-
-        if (i == 2 || i == 5) {
-            leg->set_target_foot_position(0, 250, 0);
-        } else {
-            leg->set_target_foot_position(target_position);
-        }
-
-        leg->set_target_foot_position(target_position);
-
+    for (auto leg : legs) {
         leg->update();
     }
+
+    return;
 
     snprintf(buffer, buffer_size, "dt:%4d ms", uint16_t(delta * 1000.0f));
     Serial.print(buffer);
@@ -186,5 +161,97 @@ void loop() {
     Serial.print(leg6.get_error());
     Serial.print("  |  reach: ");
     Serial.print(leg6.get_reach());
+    Serial.println();
+}
+
+void read_serial() {
+    if (!Serial.available())
+        return;
+
+    String cmd = Serial.readString();
+    cmd.trim();
+
+    if (cmd == "ENABLE_SERVOS") {
+        for (auto leg : legs) {
+            leg->enable_servos();
+        }
+
+        Serial.println("DONE");
+    } else if (cmd == "DISABLE_SERVOS") {
+        for (auto leg : legs) {
+            leg->disable_servos();
+        }
+
+        Serial.println("DONE");
+    } else if (cmd == "UPDATE") {
+        for (auto leg : legs) {
+            leg->update();
+        }
+
+        Serial.println("DONE");
+    } else if (cmd == "PING") {
+        Serial.println("PONG");
+    } else if (cmd.startsWith("SET_LEG_POSITION ")) {
+        parse_leg_position_cmd(cmd.substring(17));
+    } else if (cmd.startsWith("SET ")) {
+        set_cmd(cmd.substring(4));
+    }
+}
+
+void parse_leg_position_cmd(String cmd) {
+    uint_fast8_t token_start = 0;
+
+    int_fast8_t leg_index = -1;
+    vec3_t      position  = {0, 0, 0};
+
+    for (int i = 0; i < 4; i++) {
+        uint_fast8_t token_end = cmd.indexOf(" ", token_start);
+        String       value_str = cmd.substring(token_start, token_end);
+
+        if (i == 0) {
+            leg_index = value_str.toInt();
+        } else if (i == 1) {
+            position.x = value_str.toFloat();
+        } else if (i == 2) {
+            position.y = value_str.toFloat();
+        } else if (i == 3) {
+            position.z = value_str.toFloat();
+        }
+
+        token_start = token_end + 1;
+    }
+
+    Serial.print("SET_LEG_POSITION ");
+    Serial.print(leg_index);
+    Serial.print(" ");
+    serial_print_vec3(position);
+    Serial.println();
+
+    legs[leg_index]->set_target_foot_position(position);
+}
+
+void set_cmd(String cmd) {
+    int    separator_index = cmd.indexOf("=");
+    String key             = cmd.substring(0, separator_index);
+    String value_str       = cmd.substring(separator_index + 1);
+    float  value           = value_str.toFloat();
+
+    if (key == "TOLERANCE") {
+        for (auto leg : legs) {
+            leg->set_tolerance(value);
+        }
+    } else if (key == "bar") {
+        //
+    } else {
+        Serial.print("ERROR: unknown key: ");
+        Serial.println(key);
+
+        return;
+    }
+
+    Serial.print("SET ");
+    Serial.print(key);
+    Serial.print("=");
+    Serial.print(value);
     Serial.println();
 }
