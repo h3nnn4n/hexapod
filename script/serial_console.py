@@ -17,7 +17,13 @@ if __name__ == '__main__':
     serial_port = serial.Serial(SERIAL_PORT, BAUD_RATE, timeout=SERIAL_TIMEOUT)
 
     while True:
-        command = input("> ")
+        try:
+            command = input("> ")
+        except KeyboardInterrupt:
+            break
+        except EOFError:
+            break
+
         t1 = datetime.now()
 
         serial_port.write(command.encode())
