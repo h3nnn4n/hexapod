@@ -161,19 +161,19 @@ void read_serial() {
             leg->enable_servos();
         }
 
-        Serial.println("DONE");
+        Serial.println("OK");
     } else if (cmd == "DISABLE_SERVOS") {
         for (auto leg : legs) {
             leg->disable_servos();
         }
 
-        Serial.println("DONE");
+        Serial.println("OK");
     } else if (cmd == "UPDATE") {
         for (auto leg : legs) {
             leg->update();
         }
 
-        Serial.println("DONE");
+        Serial.println("OK");
     } else if (cmd == "PING") {
         Serial.println("PONG");
     } else if (cmd.startsWith("READ_LEG_INFO ")) {
@@ -187,6 +187,8 @@ void read_serial() {
     } else {
         Serial.print("unknown command: ");
         Serial.println(cmd);
+
+        Serial.println("ERROR");
     }
 }
 
@@ -208,6 +210,8 @@ void parse_read_leg_info_cmd(String cmd) {
 
     Serial.print("current_reach ");
     Serial.println(leg->get_reach());
+
+    Serial.println("OK");
 }
 
 void parse_leg_position_cmd(String cmd) {
@@ -240,6 +244,8 @@ void parse_leg_position_cmd(String cmd) {
     Serial.println();
 
     legs[leg_index]->set_target_foot_position(position);
+
+    Serial.println("OK");
 }
 
 void parse_leg_angles_cmd(String cmd) {
@@ -272,6 +278,8 @@ void parse_leg_angles_cmd(String cmd) {
     Serial.println();
 
     legs[leg_index]->set_joint_angles(angles.x, angles.y, angles.z);
+
+    Serial.println("OK");
 }
 
 void set_cmd(String cmd) {
@@ -298,4 +306,6 @@ void set_cmd(String cmd) {
     Serial.print("=");
     Serial.print(value);
     Serial.println();
+
+    Serial.println("OK");
 }
