@@ -3,16 +3,17 @@
  *
  */
 
-#include <cstdint>
 #include <stdint.h>
+
+#include <Arduino.h>
 
 #include <Config.h>
 
-#include <Arduino.h>
 #include <BlinkenLights.h>
 #include <Joint.h>
 #include <Leg.h>
 #include <PWMServoDriver.h>
+#include <SerialReadline.h>
 #include <Utils.h>
 #include <VectorDatatype.h>
 #include <Wire.h>
@@ -76,12 +77,13 @@ void set_cmd(String cmd);
 void parse_read_leg_info_cmd(String cmd);
 void parse_leg_position_cmd(String cmd);
 void parse_leg_angles_cmd(String cmd);
-void read_serial();
+void parse_serial(char *cmd);
+
+SerialLineReader serial_reader(parse_serial);
 
 void setup() {
     Serial.begin(115200);
     Serial.setTimeout(50);
-    Serial.println("starting...");
 
     blinkenlights.init();
     blinkenlights.set_update_interval(50);
@@ -142,19 +144,18 @@ void loop() {
 
     float f = millis() / 1000.0f;
 
-    read_serial();
+    serial_reader.poll();
 
     for (auto leg : legs) {
         leg->update();
     }
 }
 
-void read_serial() {
-    if (!Serial.available())
-        return;
-
-    String cmd = Serial.readString();
+void parse_serial(char *cmd_str) {
+    String cmd = String(cmd_str);
     cmd.trim();
+
+    Serial.println(cmd);
 
     if (cmd == "ENABLE_SERVOS") {
         for (auto leg : legs) {
