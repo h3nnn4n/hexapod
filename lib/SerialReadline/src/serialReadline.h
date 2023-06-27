@@ -55,8 +55,8 @@ class LineQueue {
 class SerialLineReader {
 
   private:
-    LineQueue       queue;
-    HardwareSerial *hs;
+    LineQueue         queue;
+    usb_serial_class *hs;
     void (*isr)(char *) = NULL;
 
     int   buffer_len = 0;
@@ -64,10 +64,10 @@ class SerialLineReader {
     char *buffer;
 
   public:
-    SerialLineReader(HardwareSerial &hs, int bufsize, void (*isr)(char *)) { initialize(hs, bufsize, isr); }
-    SerialLineReader(HardwareSerial &hs, void (*isr)(char *)) { initialize(hs, 100, isr); }
-    SerialLineReader(HardwareSerial &hs, int bufsize) { initialize(hs, bufsize, NULL); }
-    SerialLineReader(HardwareSerial &hs) { initialize(hs, 100, NULL); }
+    SerialLineReader(usb_serial_class &hs, int bufsize, void (*isr)(char *)) { initialize(hs, bufsize, isr); }
+    SerialLineReader(usb_serial_class &hs, void (*isr)(char *)) { initialize(hs, 100, isr); }
+    SerialLineReader(usb_serial_class &hs, int bufsize) { initialize(hs, bufsize, NULL); }
+    SerialLineReader(usb_serial_class &hs) { initialize(hs, 100, NULL); }
     ~SerialLineReader() { delete buffer; }
 
     int available() { return queue.size(); }
@@ -77,7 +77,7 @@ class SerialLineReader {
     void read(char *);
 
   private:
-    void initialize(HardwareSerial &hs, int bufsize, void (*isr)(char *)) {
+    void initialize(usb_serial_class &hs, int bufsize, void (*isr)(char *)) {
         this->hs     = &hs;
         this->isr    = isr;
         buffer       = new char[bufsize];

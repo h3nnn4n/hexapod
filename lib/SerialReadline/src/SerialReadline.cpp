@@ -11,21 +11,19 @@ int a = 0;
 
 void SerialLineReader::poll() {
     while (hs->available()) {
-        // Read single character and save it in the buffer
         char c = hs->read();
         if (buffer_len >= buffer_limit)
             return;
+
         buffer[buffer_len++] = c;
-        // If character saved in the buffer is \n, save this line as independent string, add to the Line
-        // Queue and clear the buffer
         if (c == '\n') {
             buffer[buffer_len - 1] = 0;
             char *line             = new char[buffer_len];
-            strcpy(line, buffer);
+            strncpy(line, buffer_len, buffer);
             queue.add(line);
             buffer_len = 0;
         }
-        // If isr is set and line is ready, execute isr (this automatically disposes one line)
+
         if (!queue.isEmpty() && isr != NULL) {
             char *line = queue.get();
             isr(line);
