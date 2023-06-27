@@ -11,6 +11,8 @@
 #include <Arduino.h>
 #include <string.h>
 
+const uint16_t bufsize = 256;
+
 class LineQueue {
 
   private:
@@ -55,8 +57,7 @@ class LineQueue {
 class SerialLineReader {
 
   private:
-    LineQueue         queue;
-    usb_serial_class *hs;
+    LineQueue queue;
     void (*isr)(char *) = NULL;
 
     int   buffer_len = 0;
@@ -64,10 +65,13 @@ class SerialLineReader {
     char *buffer;
 
   public:
-    SerialLineReader(usb_serial_class &hs, int bufsize, void (*isr)(char *)) { initialize(hs, bufsize, isr); }
-    SerialLineReader(usb_serial_class &hs, void (*isr)(char *)) { initialize(hs, 100, isr); }
-    SerialLineReader(usb_serial_class &hs, int bufsize) { initialize(hs, bufsize, NULL); }
-    SerialLineReader(usb_serial_class &hs) { initialize(hs, 100, NULL); }
+    SerialLineReader(void (*isr)(char *)) {
+        this->isr = isr;
+
+        buffer       = new char[bufsize];
+        buffer_limit = bufsize;
+    }
+
     ~SerialLineReader() { delete buffer; }
 
     int available() { return queue.size(); }
@@ -75,14 +79,6 @@ class SerialLineReader {
 
     void poll();
     void read(char *);
-
-  private:
-    void initialize(usb_serial_class &hs, int bufsize, void (*isr)(char *)) {
-        this->hs     = &hs;
-        this->isr    = isr;
-        buffer       = new char[bufsize];
-        buffer_limit = bufsize;
-    }
 };
 
 #endif

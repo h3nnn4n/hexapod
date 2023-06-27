@@ -7,19 +7,23 @@
 
 #include "SerialReadline.h"
 
+#include <Arduino.h>
+
 int a = 0;
 
 void SerialLineReader::poll() {
-    while (hs->available()) {
-        char c = hs->read();
-        if (buffer_len >= buffer_limit)
+    while (Serial.available()) {
+        char c = Serial.read();
+        if (buffer_len >= buffer_limit) {
+            Serial.println("WARN: Buffer full");
             return;
+        }
 
         buffer[buffer_len++] = c;
         if (c == '\n') {
             buffer[buffer_len - 1] = 0;
             char *line             = new char[buffer_len];
-            strncpy(line, buffer_len, buffer);
+            strcpy(line, buffer);
             queue.add(line);
             buffer_len = 0;
         }
