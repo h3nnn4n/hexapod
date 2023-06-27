@@ -240,6 +240,22 @@ void Leg::set_target_foot_position(vec3_t feet_position) {
     if (_flip_axis) {
         _target_position.x = 0.0f - _target_position.x;
     }
+
+    // Rotate the target position by the leg angle offset
+    if (_base_angle != 0.0f) {
+        // FIXME: I suspect that somewhere here there is something causing the teensy to crash.
+        float  angle      = degree_to_radian(_base_angle);
+        vec3_t leg_offset = vec3_t(0.0f, 100.0f, 0.0f);
+
+        _target_position.x -= leg_offset.x;
+        _target_position.y -= leg_offset.y;
+
+        _target_position.x = _target_position.x * cos(angle) - _target_position.y * sin(angle);
+        _target_position.y = _target_position.x * sin(angle) + _target_position.y * cos(angle);
+
+        _target_position.x += leg_offset.x;
+        _target_position.y += leg_offset.y;
+    }
 }
 
 void Leg::set_target_foot_position(float x, float y, float z) {
@@ -289,3 +305,5 @@ void Leg::set_tolerance(float tolerance) { _tolerance = tolerance; }
 void Leg::set_timeout(uint16_t timeout_ms) { _timeout_ms = timeout_ms; }
 
 void Leg::set_flip_axis(bool flip_axis) { _flip_axis = flip_axis; }
+
+void Leg::set_leg_base_angle(float angle) { _base_angle = angle; }

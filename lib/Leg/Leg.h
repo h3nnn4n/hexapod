@@ -22,6 +22,8 @@ class Leg {
     void enable_servos();
     void disable_servos();
 
+    void set_leg_base_angle(float base_angle);
+
     void set_tolerance(float tolerance);
     void set_flip_axis(bool flip_axis);
 
@@ -53,6 +55,8 @@ class Leg {
 
     bool _servos_enabled = false;
     bool _flip_axis      = false;
+
+    float _base_angle = 0.0f;
 
     vec3_t _current_position;
     vec3_t _target_position;
