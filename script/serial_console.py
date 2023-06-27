@@ -26,6 +26,9 @@ if __name__ == '__main__':
 
         t1 = datetime.now()
 
+        if "\n" not in command:
+            command += "\n"
+
         serial_port.write(command.encode())
 
         t2 = datetime.now()
