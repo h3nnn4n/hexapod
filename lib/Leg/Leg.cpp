@@ -243,7 +243,6 @@ void Leg::set_target_foot_position(vec3_t feet_position) {
 
     // Rotate the target position by the leg angle offset
     if (_base_angle != 0.0f) {
-        // FIXME: I suspect that somewhere here there is something causing the teensy to crash.
         float  angle      = degree_to_radian(_base_angle);
         vec3_t leg_offset = vec3_t(0.0f, 100.0f, 0.0f);
 
