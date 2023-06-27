@@ -73,6 +73,7 @@ Leg *legs[n_legs] = {
 vec3_t target_position;
 
 void set_cmd(String cmd);
+void parse_read_leg_info_cmd(String cmd);
 void parse_leg_position_cmd(String cmd);
 void parse_leg_angles_cmd(String cmd);
 void read_serial();
@@ -146,23 +147,6 @@ void loop() {
     for (auto leg : legs) {
         leg->update();
     }
-
-    return;
-
-    snprintf(buffer, buffer_size, "dt:%4d ms", uint16_t(delta * 1000.0f));
-    Serial.print(buffer);
-    Serial.print(" ");
-    Serial.print("  |  current: ");
-    serial_print_vec3(leg6.get_current_position());
-    Serial.print("  |  target: ");
-    serial_print_vec3(leg6.get_target_position());
-    Serial.print("  |  angles: ");
-    serial_print_vec3(leg6.get_current_angles());
-    Serial.print("  |  error: ");
-    Serial.print(leg6.get_error());
-    Serial.print("  |  reach: ");
-    Serial.print(leg6.get_reach());
-    Serial.println();
 }
 
 void read_serial() {
@@ -192,13 +176,38 @@ void read_serial() {
         Serial.println("DONE");
     } else if (cmd == "PING") {
         Serial.println("PONG");
+    } else if (cmd.startsWith("READ_LEG_INFO ")) {
+        parse_read_leg_info_cmd(cmd.substring(14));
     } else if (cmd.startsWith("SET_LEG_POSITION ")) {
         parse_leg_position_cmd(cmd.substring(17));
     } else if (cmd.startsWith("SET_LEG_ANGLES ")) {
         parse_leg_angles_cmd(cmd.substring(15));
     } else if (cmd.startsWith("SET ")) {
         set_cmd(cmd.substring(4));
+    } else {
+        Serial.print("unknown command: ");
+        Serial.println(cmd);
     }
+}
+
+void parse_read_leg_info_cmd(String cmd) {
+    uint_fast8_t leg_index = cmd.toInt();
+    auto         leg       = legs[leg_index];
+
+    Serial.print("current_position ");
+    serial_println_vec3(leg->get_current_position());
+
+    Serial.print("target_position ");
+    serial_println_vec3(leg->get_target_position());
+
+    Serial.print("current_angles ");
+    serial_println_vec3(leg->get_current_angles());
+
+    Serial.print("error ");
+    Serial.println(leg->get_error());
+
+    Serial.print("current_reach ");
+    Serial.println(leg->get_reach());
 }
 
 void parse_leg_position_cmd(String cmd) {
