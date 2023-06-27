@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 
 SERIAL_PORT = config("SERIAL_PORT", default="/dev/ttyUSB0")
 BAUD_RATE = config("BAUD_RATE", default=115200)
-SERIAL_TIMEOUT = config("SERIAL_TIMEOUT", default=1, cast=int)
+SERIAL_TIMEOUT = config("SERIAL_TIMEOUT", default=1, cast=float)
 
 
 if __name__ == '__main__':
