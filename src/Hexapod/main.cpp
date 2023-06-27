@@ -74,6 +74,7 @@ vec3_t target_position;
 
 void set_cmd(String cmd);
 void parse_leg_position_cmd(String cmd);
+void parse_leg_angles_cmd(String cmd);
 void read_serial();
 
 void setup() {
@@ -193,6 +194,8 @@ void read_serial() {
         Serial.println("PONG");
     } else if (cmd.startsWith("SET_LEG_POSITION ")) {
         parse_leg_position_cmd(cmd.substring(17));
+    } else if (cmd.startsWith("SET_LEG_ANGLES ")) {
+        parse_leg_angles_cmd(cmd.substring(15));
     } else if (cmd.startsWith("SET ")) {
         set_cmd(cmd.substring(4));
     }
@@ -228,6 +231,38 @@ void parse_leg_position_cmd(String cmd) {
     Serial.println();
 
     legs[leg_index]->set_target_foot_position(position);
+}
+
+void parse_leg_angles_cmd(String cmd) {
+    uint_fast8_t token_start = 0;
+
+    int_fast8_t leg_index = -1;
+    vec3_t      angles    = {0, 0, 0};
+
+    for (int i = 0; i < 4; i++) {
+        uint_fast8_t token_end = cmd.indexOf(" ", token_start);
+        String       value_str = cmd.substring(token_start, token_end);
+
+        if (i == 0) {
+            leg_index = value_str.toInt();
+        } else if (i == 1) {
+            angles.x = value_str.toFloat();
+        } else if (i == 2) {
+            angles.y = value_str.toFloat();
+        } else if (i == 3) {
+            angles.z = value_str.toFloat();
+        }
+
+        token_start = token_end + 1;
+    }
+
+    Serial.print("SET_LEG_ANGLES ");
+    Serial.print(leg_index);
+    Serial.print(" ");
+    serial_print_vec3(angles);
+    Serial.println();
+
+    legs[leg_index]->set_joint_angles(angles.x, angles.y, angles.z);
 }
 
 void set_cmd(String cmd) {
