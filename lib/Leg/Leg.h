@@ -82,9 +82,11 @@ class Leg {
     float    _tolerance  = 1.0f;
     uint16_t _timeout_ms = 50;
 
-    unsigned long long _last_time = 0;
-    unsigned long long _now       = 0;
-    float              _delta     = 0.0f;
+    unsigned long long _last_update  = 0;
+    unsigned long long _last_time    = 0;
+    unsigned long long _now          = 0;
+    float              _delta        = 0.0f;
+    uint16_t           _update_timer = 50;
 
     void move_joints(vec3_t angles);
     void move_joints(float coxa_angle, float femur_angle, float tibia_angle);

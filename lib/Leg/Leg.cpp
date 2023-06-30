@@ -21,8 +21,9 @@ Leg::Leg(Joint *coxa, Joint *femur, Joint *tibia) {
     _femur = femur;
     _tibia = tibia;
 
-    _now       = millis();
-    _last_time = _now;
+    _now         = millis();
+    _last_time   = _now;
+    _last_update = 0;
 }
 
 void Leg::enable_servos() {
@@ -41,6 +42,11 @@ void Leg::update() {
     _now       = millis();
     _delta     = (_now - _last_time) / 1000.0f;
     _last_time = _now;
+
+    if (_now - _last_update < _update_timer)
+        return;
+
+    _last_update = _now;
 
     // Check if the IK solver needs to iterate again to reduce the error
     bool needs_update = get_error() > _tolerance;
