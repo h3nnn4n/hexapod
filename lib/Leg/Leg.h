@@ -71,6 +71,7 @@ class Leg {
 
     vec3_t _current_position;
     vec3_t _target_position;
+    vec3_t _target_position;
 
     vec3_t _current_angles;
     vec3_t _target_angles;
