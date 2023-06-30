@@ -132,6 +132,7 @@ void setup() {
     for (auto leg : legs) {
         leg->init();
         leg->set_tolerance(1.0f);
+        leg->set_joint_angles(coxa_start_angle, femur_start_angle, tibia_start_angle);
         leg->disable_servos();
         leg->update();
     }
