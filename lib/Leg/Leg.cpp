@@ -65,8 +65,8 @@ void Leg::update() {
 void Leg::_update_instantaneous() { _current_angles = _target_angles; }
 
 void Leg::_update_constant_speed() {
-    vec3_t position_delta = _target_angles - _current_angles;
-    vec3_t step           = position_delta * _delta;
+    vec3_t angle_delta = (_target_angles - _current_angles).norm() * _speed;
+    vec3_t step        = angle_delta * _delta;
     _current_angles += step;
 }
 
