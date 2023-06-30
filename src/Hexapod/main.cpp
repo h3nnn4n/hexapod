@@ -332,11 +332,18 @@ void set_cmd(String cmd) {
     int    separator_index = cmd.indexOf("=");
     String key             = cmd.substring(0, separator_index);
     String value_str       = cmd.substring(separator_index + 1);
-    float  value           = value_str.toFloat();
 
     if (key == "TOLERANCE") {
+        float value = value_str.toFloat();
+
         for (auto leg : legs) {
             leg->set_tolerance(value);
+        }
+    } else if (key == "LEG_SPEED") {
+        float value = value_str.toFloat();
+
+        for (auto leg : legs) {
+            leg->set_leg_speed(value);
         }
     } else if (key == "MODE") {
         LegMode leg_mode;
