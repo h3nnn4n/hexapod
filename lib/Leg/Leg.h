@@ -50,9 +50,12 @@ class Leg {
     vec3_t get_current_position();
     vec3_t get_target_position();
     vec3_t get_current_angles();
-    float  get_error();
 
+    float get_error();
     float get_reach();
+    float get_speed();
+
+    LegMode get_mode();
 
     void set_timeout(uint16_t timeout_ms);
 

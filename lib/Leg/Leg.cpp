@@ -320,6 +320,8 @@ vec3_t Leg::get_target_position() { return _target_position; }
 
 vec3_t Leg::get_current_angles() { return _current_angles; }
 
+float Leg::get_speed() { return _speed; }
+
 float Leg::get_error() { return feet_position_error(_current_position, _target_position); }
 
 float Leg::get_reach() { return _current_position.mag(); }
@@ -337,3 +339,5 @@ void Leg::set_leg_mode(LegMode mode) { _mode = mode; }
 void Leg::set_leg_speed(float speed) { _speed = speed; }
 
 void Leg::set_leg_move_time(float move_time) { _move_time = move_time; }
+
+LegMode Leg::get_mode() { return _mode; }

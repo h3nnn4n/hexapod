@@ -221,6 +221,12 @@ void parse_read_leg_info_cmd(String cmd) {
     Serial.print("current_reach ");
     Serial.println(leg->get_reach());
 
+    Serial.print("mode ");
+    Serial.println(leg->get_reach());
+
+    Serial.print("speed ");
+    Serial.println(leg->get_speed());
+
     Serial.println("OK");
 }
 
