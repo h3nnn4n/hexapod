@@ -20,6 +20,9 @@ Leg::Leg(Joint *coxa, Joint *femur, Joint *tibia) {
     _coxa  = coxa;
     _femur = femur;
     _tibia = tibia;
+
+    _now       = millis();
+    _last_time = _now;
 }
 
 void Leg::enable_servos() {
@@ -35,15 +38,36 @@ void Leg::init() {
 }
 
 void Leg::update() {
+    _now       = millis();
+    _delta     = (_now - _last_time) / 1000.0f;
+    _last_time = _now;
+
+    // Check if the IK solver needs to iterate again to reduce the error
     bool needs_update = get_error() > _tolerance;
+    if (needs_update) {
+        switch (_mode) {
+            case INSTANTANEOUS: _target_angles = inverse_kinematics(_target_position); break;
+            case CONSTANT_SPEED: _target_angles = inverse_kinematics(_target_position); break;
+        }
+    }
 
-    if (needs_update)
-        _current_angles = inverse_kinematics(_target_position);
+    switch (_mode) {
+        case INSTANTANEOUS: _update_instantaneous(); break;
+        case CONSTANT_SPEED: _update_constant_speed(); break;
+    }
 
-    move_joints(_current_angles);
-
-    if (needs_update)
+    if (needs_update) {
+        move_joints(_current_angles);
         _current_position = forward_kinematics(_current_angles);
+    }
+}
+
+void Leg::_update_instantaneous() { _current_angles = _target_angles; }
+
+void Leg::_update_constant_speed() {
+    vec3_t position_delta = _target_angles - _current_angles;
+    vec3_t step           = position_delta * _delta;
+    _current_angles += step;
 }
 
 /**
@@ -264,6 +288,7 @@ void Leg::set_target_foot_position(float x, float y, float z) {
 
 void Leg::set_joint_angles(vec3_t angles) {
     _current_angles   = angles;
+    _target_angles    = angles;
     _target_position  = forward_kinematics(angles);
     _current_position = _target_position;
 
@@ -306,3 +331,9 @@ void Leg::set_timeout(uint16_t timeout_ms) { _timeout_ms = timeout_ms; }
 void Leg::set_flip_axis(bool flip_axis) { _flip_axis = flip_axis; }
 
 void Leg::set_leg_base_angle(float angle) { _base_angle = angle; }
+
+void Leg::set_leg_mode(LegMode mode) { _mode = mode; }
+
+void Leg::set_leg_speed(float speed) { _speed = speed; }
+
+void Leg::set_leg_move_time(float move_time) { _move_time = move_time; }

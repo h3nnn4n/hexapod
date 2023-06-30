@@ -13,6 +13,11 @@
 #include <Joint.h>
 #include <VectorDatatype.h>
 
+enum LegMode {
+    INSTANTANEOUS,   // Jump to the target position as fast as posible
+    CONSTANT_SPEED,  // Moves to the target position at a constant speed
+};
+
 class Leg {
   public:
     Leg(Joint *coxa, Joint *femur, Joint *tibia);
@@ -23,6 +28,9 @@ class Leg {
     void disable_servos();
 
     void set_leg_base_angle(float base_angle);
+    void set_leg_mode(LegMode mode);
+    void set_leg_speed(float speed);
+    void set_leg_move_time(float move_time);
 
     void set_tolerance(float tolerance);
     void set_flip_axis(bool flip_axis);
@@ -62,12 +70,24 @@ class Leg {
     vec3_t _target_position;
 
     vec3_t _current_angles;
+    vec3_t _target_angles;
+
+    LegMode _mode      = INSTANTANEOUS;
+    float   _speed     = 0.0f;
+    float   _move_time = 0.0f;
 
     float    _tolerance  = 1.0f;
     uint16_t _timeout_ms = 50;
 
+    unsigned long long _last_time = 0;
+    unsigned long long _now       = 0;
+    float              _delta     = 0.0f;
+
     void move_joints(vec3_t angles);
     void move_joints(float coxa_angle, float femur_angle, float tibia_angle);
+
+    void _update_instantaneous();
+    void _update_constant_speed();
 };
 
 #endif  // LIB_LEG_LEG_H_
