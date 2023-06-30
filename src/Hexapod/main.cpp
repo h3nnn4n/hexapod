@@ -77,6 +77,7 @@ void set_cmd(String cmd);
 void parse_read_leg_info_cmd(String cmd);
 void parse_leg_position_cmd(String cmd);
 void parse_leg_angles_cmd(String cmd);
+void parse_leg_speed_cmd(String cmd);
 void parse_serial(char *cmd);
 
 SerialLineReader serial_reader(parse_serial);
@@ -189,6 +190,8 @@ void parse_serial(char *cmd_str) {
         parse_leg_position_cmd(cmd.substring(17));
     } else if (cmd.startsWith("SET_LEG_ANGLES ")) {
         parse_leg_angles_cmd(cmd.substring(15));
+    } else if (cmd.startsWith("SET_LEG_SPEED ")) {
+        parse_leg_speed_cmd(cmd.substring(14));
     } else if (cmd.startsWith("SET ")) {
         set_cmd(cmd.substring(4));
     } else {
@@ -289,6 +292,36 @@ void parse_leg_angles_cmd(String cmd) {
     Serial.println("OK");
 }
 
+void parse_leg_speed_cmd(String cmd) {
+    uint_fast8_t token_start = 0;
+
+    int_fast8_t leg_index = -1;
+    float       leg_speed = 0.0f;
+
+    for (int i = 0; i < 2; i++) {
+        uint_fast8_t token_end = cmd.indexOf(" ", token_start);
+        String       value_str = cmd.substring(token_start, token_end);
+
+        if (i == 0) {
+            leg_index = value_str.toInt();
+        } else if (i == 1) {
+            leg_speed = value_str.toFloat();
+        }
+
+        token_start = token_end + 1;
+    }
+
+    Serial.print("SET_LEG_SPEED ");
+    Serial.print(leg_index);
+    Serial.print(" ");
+    Serial.print(leg_speed);
+    Serial.println();
+
+    legs[leg_index]->set_leg_speed(leg_speed);
+
+    Serial.println("OK");
+}
+
 void set_cmd(String cmd) {
     int    separator_index = cmd.indexOf("=");
     String key             = cmd.substring(0, separator_index);
@@ -299,8 +332,23 @@ void set_cmd(String cmd) {
         for (auto leg : legs) {
             leg->set_tolerance(value);
         }
-    } else if (key == "bar") {
-        //
+    } else if (key == "MODE") {
+        LegMode leg_mode;
+
+        if (value_str == "INSTANTANEOUS") {
+            leg_mode = LegMode::INSTANTANEOUS;
+        } else if (value_str == "CONSTANT_SPEED") {
+            leg_mode = LegMode::CONSTANT_SPEED;
+        } else {
+            Serial.print("ERROR: unknown mode: ");
+            Serial.println(value_str);
+
+            return;
+        }
+
+        for (auto leg : legs) {
+            leg->set_leg_mode(leg_mode);
+        }
     } else {
         Serial.print("ERROR: unknown key: ");
         Serial.println(key);
@@ -311,7 +359,7 @@ void set_cmd(String cmd) {
     Serial.print("SET ");
     Serial.print(key);
     Serial.print("=");
-    Serial.print(value);
+    Serial.print(value_str);
     Serial.println();
 
     Serial.println("OK");
