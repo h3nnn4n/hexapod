@@ -4,3 +4,7 @@
  */
 
 #include "Config.h"
+
+#include <stdint.h>
+
+const uint16_t pca_pwm_freq = 60;

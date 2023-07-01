@@ -90,10 +90,10 @@ void setup() {
     blinkenlights.set_update_interval(50);
 
     pca1.begin();
-    pca1.setPWMFreq(60);
+    pca1.setPWMFreq(pca_pwm_freq);
 
     pca2.begin();
-    pca2.setPWMFreq(60);
+    pca2.setPWMFreq(pca_pwm_freq);
 
     coxa1.set_angle_range(-90.0f, 90.0f);
     femur1.set_angle_range(-90.0f, 90.0f);

@@ -6,8 +6,8 @@
 #ifndef LIB_CONFIG_CONFIG_H_
 #define LIB_CONFIG_CONFIG_H_
 
-#define CUBE_FACE_SPEED 900
+#include <stdint.h>
 
-//#define __DEBUG
+extern const uint16_t pca_pwm_freq;
 
 #endif  // LIB_CONFIG_CONFIG_H_
