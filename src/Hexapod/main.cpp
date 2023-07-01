@@ -25,12 +25,6 @@ char         f_buffer[10];
 unsigned long long last_time = 0;
 unsigned long long now       = 0;
 
-const float coxa_start_angle  = 0.0f;
-const float femur_start_angle = 80.0f;
-const float tibia_start_angle = 170.0f;
-
-const int n_legs = 6;
-
 BlinkenLights blinkenlights = BlinkenLights();
 
 PWMServoDriver pca1 = PWMServoDriver(0x40);
@@ -67,7 +61,7 @@ Leg leg4 = Leg(&coxa4, &femur4, &tibia4);
 Leg leg5 = Leg(&coxa5, &femur5, &tibia5);
 Leg leg6 = Leg(&coxa6, &femur6, &tibia6);
 
-Leg *legs[n_legs] = {
+Leg *legs[N_LEGS] = {
     &leg1, &leg2, &leg3, &leg4, &leg5, &leg6,
 };
 
@@ -95,29 +89,29 @@ void setup() {
     pca2.begin();
     pca2.setPWMFreq(pca_pwm_freq);
 
-    coxa1.set_angle_range(-90.0f, 90.0f);
-    femur1.set_angle_range(-90.0f, 90.0f);
-    tibia1.set_angle_range(0.0f, 180.0f);
+    coxa1.set_angle_range(coxa_min_angle, coxa_max_angle);
+    femur1.set_angle_range(femur_min_angle, femur_max_angle);
+    tibia1.set_angle_range(tibia_min_angle, tibia_max_angle);
 
-    coxa2.set_angle_range(-90.0f, 90.0f);
-    femur2.set_angle_range(-90.0f, 90.0f);
-    tibia2.set_angle_range(0.0f, 180.0f);
+    coxa2.set_angle_range(coxa_min_angle, coxa_max_angle);
+    femur2.set_angle_range(femur_min_angle, femur_max_angle);
+    tibia2.set_angle_range(tibia_min_angle, tibia_max_angle);
 
-    coxa3.set_angle_range(-90.0f, 90.0f);
-    femur3.set_angle_range(-90.0f, 90.0f);
-    tibia3.set_angle_range(0.0f, 180.0f);
+    coxa3.set_angle_range(coxa_min_angle, coxa_max_angle);
+    femur3.set_angle_range(femur_min_angle, femur_max_angle);
+    tibia3.set_angle_range(tibia_min_angle, tibia_max_angle);
 
-    coxa4.set_angle_range(-90.0f, 90.0f);
-    femur4.set_angle_range(-90.0f, 90.0f);
-    tibia4.set_angle_range(0.0f, 180.0f);
+    coxa4.set_angle_range(coxa_min_angle, coxa_max_angle);
+    femur4.set_angle_range(femur_min_angle, femur_max_angle);
+    tibia4.set_angle_range(tibia_min_angle, tibia_max_angle);
 
-    coxa5.set_angle_range(-90.0f, 90.0f);
-    femur5.set_angle_range(-90.0f, 90.0f);
-    tibia5.set_angle_range(0.0f, 180.0f);
+    coxa5.set_angle_range(coxa_min_angle, coxa_max_angle);
+    femur5.set_angle_range(femur_min_angle, femur_max_angle);
+    tibia5.set_angle_range(tibia_min_angle, tibia_max_angle);
 
-    coxa6.set_angle_range(-90.0f, 90.0f);
-    femur6.set_angle_range(-90.0f, 90.0f);
-    tibia6.set_angle_range(0.0f, 180.0f);
+    coxa6.set_angle_range(coxa_min_angle, coxa_max_angle);
+    femur6.set_angle_range(femur_min_angle, femur_max_angle);
+    tibia6.set_angle_range(tibia_min_angle, tibia_max_angle);
 
     // XXX: !?
     leg4.set_flip_axis(true);
