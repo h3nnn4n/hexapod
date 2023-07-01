@@ -9,10 +9,10 @@
 
 const float coxa_min_angle  = -90.0f;
 const float coxa_max_angle  = 90.0f;
-const float femur_min_angle = -90.0f;
+const float femur_min_angle = -75.0f;
 const float femur_max_angle = 90.0f;
 const float tibia_min_angle = 0.0f;
-const float tibia_max_angle = 180.0f;
+const float tibia_max_angle = 165.0f;
 
 const float coxa_start_angle  = 0.0f;
 const float femur_start_angle = 80.0f;
