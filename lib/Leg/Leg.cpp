@@ -298,6 +298,10 @@ void Leg::set_target_foot_position(float x, float y, float z) {
 }
 
 void Leg::set_joint_angles(vec3_t angles) {
+    angles.x = constrain(angles.x, _coxa->min_angle, _coxa->max_angle);
+    angles.y = constrain(angles.y, _femur->min_angle, _femur->max_angle);
+    angles.z = constrain(angles.z, _tibia->min_angle, _tibia->max_angle);
+
     _current_angles   = angles;
     _target_angles    = angles;
     _target_position  = forward_kinematics(angles);
