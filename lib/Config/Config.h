@@ -23,4 +23,7 @@ extern const uint16_t pca_pwm_freq;
 
 #define N_LEGS 6
 
+#define PCA9685_ADDRESS_1 0x40
+#define PCA9685_ADDRESS_2 0x41
+
 #endif  // LIB_CONFIG_CONFIG_H_

@@ -27,8 +27,8 @@ unsigned long long now       = 0;
 
 BlinkenLights blinkenlights = BlinkenLights();
 
-PWMServoDriver pca1 = PWMServoDriver(0x40);
-PWMServoDriver pca2 = PWMServoDriver(0x41);
+PWMServoDriver pca1 = PWMServoDriver(PCA9685_ADDRESS_1);
+PWMServoDriver pca2 = PWMServoDriver(PCA9685_ADDRESS_2);
 
 Joint coxa1  = Joint(&pca1, 0);
 Joint femur1 = Joint(&pca1, 1);
