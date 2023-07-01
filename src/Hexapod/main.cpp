@@ -18,10 +18,6 @@
 #include <VectorDatatype.h>
 #include <Wire.h>
 
-const size_t buffer_size = 256;
-char         buffer[buffer_size];
-char         f_buffer[10];
-
 unsigned long long last_time = 0;
 unsigned long long now       = 0;
 
@@ -138,12 +134,6 @@ void setup() {
 
 void loop() {
     blinkenlights.update();
-
-    now         = millis();
-    float delta = (now - last_time) / 1000.0f;
-    last_time   = now;
-
-    float f = millis() / 1000.0f;
 
     serial_reader.poll();
 
