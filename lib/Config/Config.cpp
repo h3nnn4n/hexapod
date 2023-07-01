@@ -18,4 +18,6 @@ const float coxa_start_angle  = 0.0f;
 const float femur_start_angle = 80.0f;
 const float tibia_start_angle = 170.0f;
 
+const float default_tolerance = 1.0f;
+
 const uint16_t pca_pwm_freq = 60;

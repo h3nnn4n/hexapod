@@ -19,6 +19,8 @@ extern const float coxa_start_angle;
 extern const float femur_start_angle;
 extern const float tibia_start_angle;
 
+extern const float default_tolerance;
+
 extern const uint16_t pca_pwm_freq;
 
 #define N_LEGS 6
