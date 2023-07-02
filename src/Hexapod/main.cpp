@@ -160,6 +160,18 @@ void parse_serial(char *cmd_str) {
         }
 
         Serial.println("OK");
+    } else if (cmd == "READ_LEG_ERRORS") {
+        uint8_t i = 0;
+        for (auto leg : legs) {
+            Serial.print("leg ");
+            Serial.print(i);
+            Serial.print(" error ");
+            Serial.println(leg->get_error());
+
+            i++;
+        }
+
+        Serial.println("OK");
     } else if (cmd == "UPDATE") {
         for (auto leg : legs) {
             leg->update();
