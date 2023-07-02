@@ -114,11 +114,11 @@ void setup() {
     leg5.set_flip_axis(true);
     leg6.set_flip_axis(true);
 
-    leg1.set_leg_base_angle(60.0f);
-    leg4.set_leg_base_angle(-60.0f);
+    leg1.set_leg_base_angle(-60.0f);
+    leg4.set_leg_base_angle(60.0f);
 
-    leg3.set_leg_base_angle(-60.0f);
-    leg6.set_leg_base_angle(60.0f);
+    leg3.set_leg_base_angle(60.0f);
+    leg6.set_leg_base_angle(-60.0f);
 
     for (auto leg : legs) {
         leg->init();
