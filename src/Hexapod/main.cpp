@@ -218,10 +218,19 @@ void parse_read_leg_info_cmd(String cmd) {
     Serial.println(leg->get_reach());
 
     Serial.print("mode ");
-    Serial.println(leg->get_mode());
+    auto mode = leg->get_mode();
+    if (mode == LegMode::INSTANTANEOUS) {
+        Serial.println("INSTANTANEOUS");
+    } else if (mode == LegMode::CONSTANT_SPEED) {
+        Serial.println("CONSTANT_SPEED");
+    } else {
+        Serial.println("???");
+    }
 
-    Serial.print("speed ");
-    Serial.println(leg->get_speed());
+    if (mode == LegMode::CONSTANT_SPEED) {
+        Serial.print("speed ");
+        Serial.println(leg->get_speed());
+    }
 
     Serial.println("OK");
 }
