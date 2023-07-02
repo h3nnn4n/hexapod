@@ -39,46 +39,41 @@ void Leg::init() {
 }
 
 void Leg::update() {
-    _now       = millis();
-    _delta     = (_now - _last_time) / 1000.0f;
-    _last_time = _now;
+    _now = millis();
 
     if (_now - _last_update < _update_timer)
         return;
 
-    _last_update = _now;
-
-    // Check if the IK solver needs to iterate again to reduce the error
-    bool needs_update = get_error() > _tolerance;
-    if (needs_update) {
-        switch (_mode) {
-            case INSTANTANEOUS: _target_angles = inverse_kinematics(_target_position); break;
-            case CONSTANT_SPEED: _target_angles = inverse_kinematics(_target_position); break;
-        }
-    }
+    _delta     = (_now - _last_time) / 1000.0f;
+    _last_time = _now;
 
     switch (_mode) {
         case INSTANTANEOUS: _update_instantaneous(); break;
         case CONSTANT_SPEED: _update_constant_speed(); break;
+        default: Serial.println("ERROR: Invalid leg mode"); break;
     }
 
-    if (needs_update) {
-        move_joints(_current_angles);
-        _current_position = forward_kinematics(_current_angles);
-    }
+    move_joints(_current_angles);
+    _current_position = forward_kinematics(_current_angles);
 }
 
-void Leg::_update_instantaneous() { _current_angles = _target_angles; }
+void Leg::_update_instantaneous() { _current_angles = inverse_kinematics(_target_position); }
 
 void Leg::_update_constant_speed() {
-    vec3_t diff = _target_angles - _current_angles;
+    vec3_t distance_vector = (_final_position - _target_position);
+    vec3_t step_direction  = distance_vector.norm();
+    vec3_t step            = step_direction * _speed * _delta;
 
-    if (diff.mag() < _tolerance)
-        return;
+    float distance_left = distance_vector.mag();
+    if (distance_left >= _tolerance) {
+        // Serial.printf("distance_left: %4.2f speed: %f  delta: %f  step: %3.2f, %3.2f, %3.2f\n", distance_left,
+        // _speed, _delta, step.x, step.y, step.z);
+        _target_position = _target_position + step;
+    } else {
+        _target_position = _final_position;
+    }
 
-    vec3_t angle_delta = (diff).norm() * _speed;
-    vec3_t step        = angle_delta * _delta;
-    _current_angles += step;
+    _current_angles = inverse_kinematics(_target_position);
 }
 
 /**
@@ -269,11 +264,11 @@ float feet_position_error(vec3_t feet_position, vec3_t target_position) {
 }
 
 void Leg::set_target_foot_position(vec3_t feet_position) {
-    _target_position = feet_position;
+    vec3_t target = feet_position;
 
     // Flip the x axis if the leg is on the right side
     if (_flip_axis) {
-        _target_position.x = 0.0f - _target_position.x;
+        target.x = 0.0f - target.x;
     }
 
     // Rotate the target position by the leg angle offset
@@ -281,14 +276,20 @@ void Leg::set_target_foot_position(vec3_t feet_position) {
         float  angle      = degree_to_radian(_base_angle);
         vec3_t leg_offset = vec3_t(0.0f, 100.0f, 0.0f);
 
-        _target_position.x -= leg_offset.x;
-        _target_position.y -= leg_offset.y;
+        target.x -= leg_offset.x;
+        target.y -= leg_offset.y;
 
-        _target_position.x = _target_position.x * cos(angle) - _target_position.y * sin(angle);
-        _target_position.y = _target_position.x * sin(angle) + _target_position.y * cos(angle);
+        target.x = target.x * cos(angle) - target.y * sin(angle);
+        target.y = target.x * sin(angle) + target.y * cos(angle);
 
-        _target_position.x += leg_offset.x;
-        _target_position.y += leg_offset.y;
+        target.x += leg_offset.x;
+        target.y += leg_offset.y;
+    }
+
+    if (_mode == INSTANTANEOUS) {
+        _target_position = target;
+    } else if (_mode == CONSTANT_SPEED) {
+        _final_position = target;
     }
 }
 
@@ -303,9 +304,9 @@ void Leg::set_joint_angles(vec3_t angles) {
     angles.z = constrain(angles.z, _tibia->min_angle, _tibia->max_angle);
 
     _current_angles   = angles;
-    _target_angles    = angles;
     _target_position  = forward_kinematics(angles);
     _current_position = _target_position;
+    _final_position   = _target_position;
 
     move_joints(angles);
 }
@@ -332,6 +333,8 @@ void Leg::move_joints(vec3_t angles) {
 vec3_t Leg::get_current_position() { return _current_position; }
 
 vec3_t Leg::get_target_position() { return _target_position; }
+
+vec3_t Leg::get_final_position() { return _final_position; }
 
 vec3_t Leg::get_current_angles() { return _current_angles; }
 

@@ -208,6 +208,11 @@ void parse_read_leg_info_cmd(String cmd) {
     Serial.print("target_position ");
     serial_println_vec3(leg->get_target_position());
 
+    if (leg->get_mode() == LegMode::CONSTANT_SPEED) {
+        Serial.print("final_position ");
+        serial_println_vec3(leg->get_final_position());
+    }
+
     Serial.print("current_angles ");
     serial_println_vec3(leg->get_current_angles());
 

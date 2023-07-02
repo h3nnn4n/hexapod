@@ -49,6 +49,7 @@ class Leg {
 
     vec3_t get_current_position();
     vec3_t get_target_position();
+    vec3_t get_final_position();
     vec3_t get_current_angles();
 
     float get_error();
@@ -71,9 +72,9 @@ class Leg {
 
     vec3_t _current_position;
     vec3_t _target_position;
+    vec3_t _final_position;
 
     vec3_t _current_angles;
-    vec3_t _target_angles;
 
     LegMode _mode      = INSTANTANEOUS;
     float   _speed     = 0.0f;
@@ -86,7 +87,7 @@ class Leg {
     unsigned long long _last_time    = 0;
     unsigned long long _now          = 0;
     float              _delta        = 0.0f;
-    uint16_t           _update_timer = 50;
+    uint16_t           _update_timer = 25;
 
     void move_joints(vec3_t angles);
     void move_joints(float coxa_angle, float femur_angle, float tibia_angle);
