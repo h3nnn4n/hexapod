@@ -367,3 +367,5 @@ void Leg::set_leg_move_time(float move_time) { _move_time = move_time; }
 LegMode Leg::get_mode() { return _mode; }
 
 uint8_t Leg::get_id() { return _id; }
+
+float Leg::get_tolerance() { return _tolerance; }

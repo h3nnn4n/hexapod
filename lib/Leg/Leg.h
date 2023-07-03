@@ -56,6 +56,7 @@ class Leg {
     float get_error();
     float get_reach();
     float get_speed();
+    float get_tolerance();
 
     LegMode get_mode();
 
