@@ -399,12 +399,10 @@ void get_cmd(String cmd) {
 
     if (key == "TOLERANCE") {
         for (auto leg : legs) {
-            auto mode = leg->get_mode();
             Serial.printf("LEG%d TOLERANCE=%f\n", leg->get_id(), leg->get_tolerance());
         }
     } else if (key == "LEG_SPEED") {
         for (auto leg : legs) {
-            auto mode = leg->get_mode();
             Serial.printf("LEG%d SPEED=%f\n", leg->get_id(), leg->get_speed());
         }
     } else if (key == "MODE") {
