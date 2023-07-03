@@ -38,3 +38,27 @@ void serial_println_vec3(vec3_t v) {
 float degree_to_radian(float degree) { return degree * (M_PI / 180.0f); }
 
 float radian_to_degree(float radian) { return radian * (180.0f / M_PI); }
+
+uint16_t count_char_in_string(char *str, char c) {
+    uint16_t count = 0;
+
+    for (uint16_t i = 0; i < strlen(str); i++) {
+        if (str[i] == c) {
+            count++;
+        }
+    }
+
+    return count;
+}
+
+uint16_t count_char_in_string(String *str, char c) {
+    uint16_t count = 0;
+
+    for (uint16_t i = 0; i < str->length(); i++) {
+        if (str[i] == c) {
+            count++;
+        }
+    }
+
+    return count;
+}

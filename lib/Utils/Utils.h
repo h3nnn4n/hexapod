@@ -15,4 +15,7 @@ void serial_println_vec3(vec3_t v);
 float degree_to_radian(float degree);
 float radian_to_degree(float radian);
 
+uint16_t count_char_in_string(char *str, char c);
+uint16_t count_char_in_string(String *str, char c);
+
 #endif  // LIB_UTILS_UTILS_H_
