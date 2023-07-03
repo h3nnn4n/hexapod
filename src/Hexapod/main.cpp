@@ -64,6 +64,7 @@ Leg *legs[N_LEGS] = {
 vec3_t target_position;
 
 void set_cmd(String cmd);
+void get_cmd(String cmd);
 void parse_read_leg_info_cmd(String cmd);
 void parse_leg_position_cmd(String cmd);
 void parse_leg_angles_cmd(String cmd);
@@ -190,6 +191,8 @@ void parse_serial(char *cmd_str) {
         parse_leg_speed_cmd(cmd.substring(14));
     } else if (cmd.startsWith("SET ")) {
         set_cmd(cmd.substring(4));
+    } else if (cmd.startsWith("GET ")) {
+        get_cmd(cmd.substring(4));
     } else {
         Serial.print("unknown command: ");
         Serial.println(cmd);
@@ -384,6 +387,43 @@ void set_cmd(String cmd) {
     Serial.print("=");
     Serial.print(value_str);
     Serial.println();
+
+    Serial.println("OK");
+}
+
+void get_cmd(String cmd) {
+    int    separator_index = cmd.indexOf(" ");
+    String key             = cmd.substring(0, separator_index);
+    // FIXME: We are only reading the first token
+
+    if (key == "TOLERANCE") {
+        for (auto leg : legs) {
+            auto mode = leg->get_mode();
+            Serial.printf("LEG%d TOLERANCE=%f\n", leg->get_id(), leg->get_tolerance());
+        }
+    } else if (key == "LEG_SPEED") {
+        for (auto leg : legs) {
+            auto mode = leg->get_mode();
+            Serial.printf("LEG%d SPEED=%f\n", leg->get_id(), leg->get_speed());
+        }
+    } else if (key == "MODE") {
+        for (auto leg : legs) {
+            auto mode = leg->get_mode();
+            Serial.printf("LEG%d MODE=", leg->get_id());
+            if (mode == LegMode::INSTANTANEOUS) {
+                Serial.println("INSTANTANEOUS");
+            } else if (mode == LegMode::CONSTANT_SPEED) {
+                Serial.println("CONSTANT_SPEED");
+            } else {
+                Serial.println("???");
+            }
+        }
+    } else {
+        Serial.print("ERROR: unknown key: ");
+        Serial.println(key);
+
+        return;
+    }
 
     Serial.println("OK");
 }
