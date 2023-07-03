@@ -19,17 +19,15 @@ float feet_position_error(vec3_t feet_position, vec3_t target_position);
 Leg::Leg(uint8_t id, Joint *coxa, Joint *femur, Joint *tibia) {
     _id = id;
 
-    Leg(coxa, femur, tibia);
+    _coxa  = coxa;
+    _femur = femur;
+    _tibia = tibia;
 }
 
 Leg::Leg(Joint *coxa, Joint *femur, Joint *tibia) {
     _coxa  = coxa;
     _femur = femur;
     _tibia = tibia;
-
-    _now         = millis();
-    _last_time   = _now;
-    _last_update = 0;
 }
 
 void Leg::enable_servos() {
@@ -40,6 +38,10 @@ void Leg::enable_servos() {
 void Leg::disable_servos() { _servos_enabled = false; }
 
 void Leg::init() {
+    _now         = millis();
+    _last_time   = _now;
+    _last_update = 0;
+
     set_joint_angles(0.0f, 0.0f, 0.0f);
     _current_position = forward_kinematics(_current_angles);
 }
