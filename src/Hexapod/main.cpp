@@ -313,11 +313,12 @@ void parse_leg_angles_cmd(String cmd) {
 
 void parse_leg_speed_cmd(String cmd) {
     uint_fast8_t token_start = 0;
+    uint_fast8_t n_tokens    = count_char_in_string(&cmd, ' ') + 1;
 
     int_fast8_t leg_index = -1;
     float       leg_speed = 0.0f;
 
-    for (int i = 0; i < 2; i++) {
+    for (int i = 0; i < n_tokens; i++) {
         uint_fast8_t token_end = cmd.indexOf(" ", token_start);
         String       value_str = cmd.substring(token_start, token_end);
 
