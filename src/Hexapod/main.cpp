@@ -18,9 +18,6 @@
 #include <VectorDatatype.h>
 #include <Wire.h>
 
-unsigned long long last_time = 0;
-unsigned long long now       = 0;
-
 BlinkenLights blinkenlights = BlinkenLights();
 
 PWMServoDriver pca1 = PWMServoDriver(PCA9685_ADDRESS_1);
@@ -128,9 +125,6 @@ void setup() {
         leg->disable_servos();
         leg->update();
     }
-
-    now       = millis();
-    last_time = millis();
 }
 
 void loop() {
