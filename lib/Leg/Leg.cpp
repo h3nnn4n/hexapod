@@ -16,6 +16,12 @@
 
 float feet_position_error(vec3_t feet_position, vec3_t target_position);
 
+Leg::Leg(uint8_t id, Joint *coxa, Joint *femur, Joint *tibia) {
+    _id = id;
+
+    Leg(coxa, femur, tibia);
+}
+
 Leg::Leg(Joint *coxa, Joint *femur, Joint *tibia) {
     _coxa  = coxa;
     _femur = femur;
@@ -359,3 +365,5 @@ void Leg::set_leg_speed(float speed) { _speed = speed; }
 void Leg::set_leg_move_time(float move_time) { _move_time = move_time; }
 
 LegMode Leg::get_mode() { return _mode; }
+
+uint8_t Leg::get_id() { return _id; }

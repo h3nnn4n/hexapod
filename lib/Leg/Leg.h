@@ -21,6 +21,7 @@ enum LegMode {
 class Leg {
   public:
     Leg(Joint *coxa, Joint *femur, Joint *tibia);
+    Leg(uint8_t id, Joint *coxa, Joint *femur, Joint *tibia);
 
     void init();
     void update();
@@ -58,9 +59,13 @@ class Leg {
 
     LegMode get_mode();
 
+    uint8_t get_id();
+
     void set_timeout(uint16_t timeout_ms);
 
   private:
+    uint8_t _id = 1 << 8;
+
     Joint *_coxa;
     Joint *_femur;
     Joint *_tibia;

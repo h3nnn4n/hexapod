@@ -50,12 +50,12 @@ Joint coxa6  = Joint(&pca2, 8);
 Joint femur6 = Joint(&pca2, 9);
 Joint tibia6 = Joint(&pca2, 10);
 
-Leg leg1 = Leg(&coxa1, &femur1, &tibia1);
-Leg leg2 = Leg(&coxa2, &femur2, &tibia2);
-Leg leg3 = Leg(&coxa3, &femur3, &tibia3);
-Leg leg4 = Leg(&coxa4, &femur4, &tibia4);
-Leg leg5 = Leg(&coxa5, &femur5, &tibia5);
-Leg leg6 = Leg(&coxa6, &femur6, &tibia6);
+Leg leg1 = Leg(0, &coxa1, &femur1, &tibia1);
+Leg leg2 = Leg(1, &coxa2, &femur2, &tibia2);
+Leg leg3 = Leg(2, &coxa3, &femur3, &tibia3);
+Leg leg4 = Leg(3, &coxa4, &femur4, &tibia4);
+Leg leg5 = Leg(4, &coxa5, &femur5, &tibia5);
+Leg leg6 = Leg(5, &coxa6, &femur6, &tibia6);
 
 Leg *legs[N_LEGS] = {
     &leg1, &leg2, &leg3, &leg4, &leg5, &leg6,
