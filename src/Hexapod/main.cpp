@@ -108,9 +108,9 @@ void setup() {
     tibia6.set_angle_range(tibia_min_angle, tibia_max_angle);
 
     // XXX: !?
-    leg4.set_flip_axis(true);
-    leg5.set_flip_axis(true);
-    leg6.set_flip_axis(true);
+    // leg4.set_flip_axis(true);
+    // leg5.set_flip_axis(true);
+    // leg6.set_flip_axis(true);
 
     leg1.set_leg_base_angle(-60.0f);
     leg4.set_leg_base_angle(60.0f);
