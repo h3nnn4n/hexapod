@@ -312,7 +312,7 @@ void parse_leg_speed_cmd(String cmd) {
     int_fast8_t leg_index = -1;
     float       leg_speed = 0.0f;
 
-    for (int i = 0; i < n_tokens; i++) {
+    for (uint_fast8_t i = 0; i < n_tokens; i++) {
         uint_fast8_t token_end = cmd.indexOf(" ", token_start);
         String       value_str = cmd.substring(token_start, token_end);
 
