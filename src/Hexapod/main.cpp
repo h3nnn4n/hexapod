@@ -199,6 +199,9 @@ void parse_read_leg_info_cmd(String cmd) {
     uint_fast8_t leg_index = cmd.toInt();
     auto         leg       = legs[leg_index];
 
+    Serial.print("id: ");
+    Serial.println(leg->get_id());
+
     Serial.print("current_position: ");
     serial_println_vec3(leg->get_current_position());
 
