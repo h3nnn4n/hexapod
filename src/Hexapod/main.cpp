@@ -199,27 +199,27 @@ void parse_read_leg_info_cmd(String cmd) {
     uint_fast8_t leg_index = cmd.toInt();
     auto         leg       = legs[leg_index];
 
-    Serial.print("current_position ");
+    Serial.print("current_position: ");
     serial_println_vec3(leg->get_current_position());
 
-    Serial.print("target_position ");
+    Serial.print("target_position: ");
     serial_println_vec3(leg->get_target_position());
 
     if (leg->get_mode() == LegMode::CONSTANT_SPEED) {
-        Serial.print("final_position ");
+        Serial.print("final_position: ");
         serial_println_vec3(leg->get_final_position());
     }
 
-    Serial.print("current_angles ");
+    Serial.print("current_angles: ");
     serial_println_vec3(leg->get_current_angles());
 
-    Serial.print("error ");
+    Serial.print("error: ");
     Serial.println(leg->get_error());
 
-    Serial.print("current_reach ");
+    Serial.print("current_reach: ");
     Serial.println(leg->get_reach());
 
-    Serial.print("mode ");
+    Serial.print("mode: ");
     auto mode = leg->get_mode();
     if (mode == LegMode::INSTANTANEOUS) {
         Serial.println("INSTANTANEOUS");
@@ -230,9 +230,12 @@ void parse_read_leg_info_cmd(String cmd) {
     }
 
     if (mode == LegMode::CONSTANT_SPEED) {
-        Serial.print("speed ");
+        Serial.print("speed: ");
         Serial.println(leg->get_speed());
     }
+
+    Serial.print("tolerance: ");
+    Serial.println(leg->get_tolerance());
 
     Serial.println("OK");
 }
