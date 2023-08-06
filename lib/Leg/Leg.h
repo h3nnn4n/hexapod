@@ -65,7 +65,7 @@ class Leg {
     void set_timeout(uint16_t timeout_ms);
 
   private:
-    uint8_t _id = 1 << 8;
+    uint8_t _id = (1 << 8) - 1;
 
     Joint *_coxa;
     Joint *_femur;
