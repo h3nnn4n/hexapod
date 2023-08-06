@@ -22,7 +22,7 @@ void print_vec3(char *buffer, size_t n, vec3_t v) {
     dtostrf(v.y, 7, 2, f_buffer_y);
     dtostrf(v.z, 7, 2, f_buffer_z);
 
-    snprintf(buffer, n, "x=%s y=%s z=%s", f_buffer_x, f_buffer_y, f_buffer_z);
+    snprintf(buffer, n, "%s,%s,%s", f_buffer_x, f_buffer_y, f_buffer_z);
 }
 
 void serial_print_vec3(vec3_t v) {
