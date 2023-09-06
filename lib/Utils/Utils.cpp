@@ -9,6 +9,14 @@
 
 #include <VectorDatatype.h>
 
+// Depending the toolchain available in the OS, this might be required in order
+// for the code to compile
+extern "C"{
+  int _getpid(){ return -1;}
+  int _kill(int pid, int sig){ return -1; }
+  int _write(){return -1;}
+}
+
 const size_t BUFFER_SIZE = 100;
 
 char f_buffer_x[10];
