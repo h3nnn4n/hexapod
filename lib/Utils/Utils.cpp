@@ -9,6 +9,7 @@
 
 #include <VectorDatatype.h>
 
+// https://forum.pjrc.com/threads/29177-Teensy-3-1-signalr-c-(-text-_kill_r-0xe)-undefined-reference-to-_kill-error
 // Depending the toolchain available in the OS, this might be required in order
 // for the code to compile
 extern "C"{
