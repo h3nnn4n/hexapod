@@ -8,6 +8,9 @@ The brains for the Aratu Hexapod.
 
 - For teensy 4.1 some changes are required:
   - The Makefile needs to include `Teensy.mk` instead of `Arduino.mk`
+  - Set:
+    - `BOARD_TAG` to `teensy41`
+    - `BOARD_SUB` to `600`
   - `ARDUINO_CORE_PATH`  in `Teensy.mk` needs to be updated to point to the `teensy4` core
   - `boards.txt` needs to be updated:
     - Set `teensy41.upload.maximum_data_size` and `teensy41.upload.maximum_size`
