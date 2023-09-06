@@ -72,7 +72,7 @@ SerialLineReader serial_reader(parse_serial);
 
 void setup() {
     Serial.begin(115200);
-    Serial.setTimeout(50);
+    Serial.setTimeout(10);
 
     blinkenlights.init();
     blinkenlights.set_update_interval(50);
